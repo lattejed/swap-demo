@@ -1,15 +1,13 @@
 import React from 'react';
-import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
-import './App.css';
 
 function App(): JSX.Element {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div className="">
+      <header className="">
+        <img src="https://plchldr.co/i/150x150" className="" alt="logo" />
         <Counter />
-        <p>
+        <p className="">
           Edit
           {' '}
           <code>src/App.tsx</code>
@@ -19,7 +17,7 @@ function App(): JSX.Element {
         <span>
           <span>Learn </span>
           <a
-            className="App-link"
+            className=""
             href="https://reactjs.org/"
             target="_blank"
             rel="noopener noreferrer"
@@ -28,7 +26,7 @@ function App(): JSX.Element {
           </a>
           <span>, </span>
           <a
-            className="App-link"
+            className=""
             href="https://redux.js.org/"
             target="_blank"
             rel="noopener noreferrer"
@@ -37,7 +35,7 @@ function App(): JSX.Element {
           </a>
           <span>, </span>
           <a
-            className="App-link"
+            className=""
             href="https://redux-toolkit.js.org/"
             target="_blank"
             rel="noopener noreferrer"
@@ -47,7 +45,7 @@ function App(): JSX.Element {
           ,
           <span> and </span>
           <a
-            className="App-link"
+            className=""
             href="https://react-redux.js.org/"
             target="_blank"
             rel="noopener noreferrer"
