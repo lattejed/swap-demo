@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ApplicationModal, useModalOpen, useToggleModal } from '../../state/application';
+import {
+  ApplicationModal, useModalOpen, useToggleModal,
+} from '../../state/application';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import { ChainId, DEFAULT_CHAIN_ID } from '../../constants';
 
@@ -14,9 +16,11 @@ function Row({
   onSelect: (chainId: number) => void,
 }): JSX.Element {
   return (
-    <button type="button" onClick={() => onSelect(chainId)}>
-      <div>{name}</div>
-    </button>
+    <div className="hover:bg-gray-200">
+      <button type="button" onClick={() => onSelect(chainId)}>
+        <div>{name}</div>
+      </button>
+    </div>
   );
 }
 
@@ -25,7 +29,7 @@ export default function Network(): JSX.Element {
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR);
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR);
 
-  useOutsideClick(node, toggle);
+  useOutsideClick(node, open ? toggle : undefined);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentChainId = searchParams.get('chainId') || null;
@@ -38,7 +42,8 @@ export default function Network(): JSX.Element {
 
   const onChainSelect = useCallback((chainId: number) => {
     setSearchParams({ chainId: chainId.toString() });
-  }, [setSearchParams]);
+    toggle();
+  }, [setSearchParams, toggle]);
 
   return (
     <div ref={node as never} className="relative">
