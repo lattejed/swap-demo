@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Network from './features/network/Network';
-import Account from './features/account/Account';
+import Network from './components/network/Network';
+import Account from './components/account/Account';
 import Swap from './pages/Swap';
 
 export default function App(): JSX.Element {
