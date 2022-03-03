@@ -1,0 +1,7 @@
+export enum ChainId {
+  ETHEREUM_RINKEBY = 4,
+  OPTIMISM_GOERLI = 420,
+  ARBITRUM_RINKEBY = 421611,
+}
+
+export const DEFAULT_CHAIN_ID: ChainId = ChainId.ETHEREUM_RINKEBY;
