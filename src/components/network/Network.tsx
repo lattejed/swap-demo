@@ -1,6 +1,23 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ApplicationModal, useModalOpen, useToggleModal } from '../../state/application';
 import useOutsideClick from '../../hooks/useOutsideClick';
+
+function Row({
+  name,
+  chainId,
+  onSelect,
+}: {
+  name: string,
+  chainId: number,
+  onSelect: (chainId: number) => void,
+}): JSX.Element {
+  return (
+    <button type="button" onClick={() => onSelect(chainId)}>
+      <div>{name}</div>
+    </button>
+  );
+}
 
 export default function Network(): JSX.Element {
   const node = useRef<HTMLDivElement>();
@@ -9,13 +26,30 @@ export default function Network(): JSX.Element {
 
   useOutsideClick(node, toggle);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentChainId = searchParams.get('chainId') || -1;
+
+  useEffect(() => {
+    if (currentChainId === -1) {
+      setSearchParams({ chainId: (1).toString() }); // TODO: Default chain
+    }
+  }, [currentChainId]);
+
+  const onChainSelect = useCallback((chainId: number) => {
+    setSearchParams({ chainId: chainId.toString() });
+  }, []);
+
+  // TODO: Chain id consts
   return (
-    <div ref={node as never} className="">
+    <div ref={node as never} className="relative">
       <button type="button" onClick={toggle}>
-        <img src="https://plchldr.co/i/24x24" className="" alt="eth" />
+        {currentChainId}
       </button>
       {open && (
-      <div>IS OPEN</div>
+      <div className="absolute right-0 top-10 w-64 p-5 border rounded-2xl shadow-md bg-white">
+        <Row name="Ethereum - Rinkeby" chainId={1} onSelect={onChainSelect} />
+        <Row name="Arbitrum - Testnet" chainId={2} onSelect={onChainSelect} />
+      </div>
       )}
     </div>
   );
