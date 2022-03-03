@@ -10,7 +10,7 @@ export default function Network(): JSX.Element {
   useOnClickOutside(node, toggle);
 
   return (
-    <div ref={node as any} className="">
+    <div ref={node as never} className="">
       <button type="button" onClick={toggle}>
         <img src="https://plchldr.co/i/24x24" className="" alt="eth" />
       </button>

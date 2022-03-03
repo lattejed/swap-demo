@@ -1,21 +1,12 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Network from './components/network/Network';
-import Account from './components/account/Account';
+import Header from './components/header/Header';
 import Swap from './pages/Swap';
 
 export default function App(): JSX.Element {
   return (
     <div className="">
-      <header className="p-5">
-        <div className="flex justify-between">
-          <img src="https://plchldr.co/i/24x24" className="" alt="logo" />
-          <div className="flex space-x-5">
-            <Network />
-            <Account />
-          </div>
-        </div>
-      </header>
+      <Header />
       <Routes>
         <Route path="/" element={<Navigate to="/swap" />} />
         <Route path="/swap" element={<Swap />} />
