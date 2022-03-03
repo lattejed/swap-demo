@@ -1,10 +1,8 @@
 import React from 'react';
-import { Counter } from '../components/counter/Counter';
 
 function Swap(): JSX.Element {
   return (
     <div className="">
-      <Counter />
       <p className="">
         Edit
         {' '}
