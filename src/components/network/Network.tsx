@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ApplicationModal, useModalOpen, useToggleModal } from '../../state/application';
 import useOutsideClick from '../../hooks/useOutsideClick';
+import { ChainId, DEFAULT_CHAIN_ID } from '../../constants';
 
 function Row({
   name,
@@ -27,11 +28,11 @@ export default function Network(): JSX.Element {
   useOutsideClick(node, toggle);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentChainId = searchParams.get('chainId') || -1;
+  const currentChainId = searchParams.get('chainId') || null;
 
   useEffect(() => {
-    if (currentChainId === -1) {
-      setSearchParams({ chainId: (1).toString() }); // TODO: Default chain
+    if (currentChainId === null) {
+      setSearchParams({ chainId: DEFAULT_CHAIN_ID.toString() });
     }
   }, [currentChainId, setSearchParams]);
 
@@ -39,7 +40,6 @@ export default function Network(): JSX.Element {
     setSearchParams({ chainId: chainId.toString() });
   }, [setSearchParams]);
 
-  // TODO: Chain id consts
   return (
     <div ref={node as never} className="relative">
       <button type="button" onClick={toggle}>
@@ -47,8 +47,9 @@ export default function Network(): JSX.Element {
       </button>
       {open && (
       <div className="absolute right-0 top-10 w-64 p-5 border rounded-2xl shadow-md bg-white">
-        <Row name="Ethereum - Rinkeby" chainId={1} onSelect={onChainSelect} />
-        <Row name="Arbitrum - Testnet" chainId={2} onSelect={onChainSelect} />
+        <Row name="Ethereum - Rinkeby" chainId={ChainId.ETHEREUM_RINKEBY} onSelect={onChainSelect} />
+        <Row name="Arbitrum - Rinkeby" chainId={ChainId.ARBITRUM_RINKEBY} onSelect={onChainSelect} />
+        <Row name="Optimism - Goerli" chainId={ChainId.OPTIMISM_GOERLI} onSelect={onChainSelect} />
       </div>
       )}
     </div>
