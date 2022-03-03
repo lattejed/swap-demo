@@ -33,11 +33,11 @@ export default function Network(): JSX.Element {
     if (currentChainId === -1) {
       setSearchParams({ chainId: (1).toString() }); // TODO: Default chain
     }
-  }, [currentChainId]);
+  }, [currentChainId, setSearchParams]);
 
   const onChainSelect = useCallback((chainId: number) => {
     setSearchParams({ chainId: chainId.toString() });
-  }, []);
+  }, [setSearchParams]);
 
   // TODO: Chain id consts
   return (

@@ -33,7 +33,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
     'max-len': 'off',
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/exhaustive-deps': 'error',
     'import/prefer-default-export': 'off',
     'react/prop-types': 'off',
     'no-param-reassign': ['error', { props: false }],
