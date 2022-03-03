@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { ApplicationModal, useModalOpen, useToggleModal } from '../../state/application';
-import useOnClickOutside from '../../hooks/useOnClickOutside';
+import useOnClickOutside from '../../hooks/useOutsideClick';
 
 export default function Network(): JSX.Element {
   const node = useRef<HTMLDivElement>();
