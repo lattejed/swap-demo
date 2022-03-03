@@ -46,7 +46,10 @@ export default function Network(): JSX.Element {
         {currentChainId}
       </button>
       {open && (
-      <div className="absolute right-0 top-10 w-64 p-5 border rounded-2xl shadow-md bg-white">
+      <div
+        className="absolute right-0 top-10 w-64 p-5 border rounded-2xl shadow-md bg-white"
+        onMouseLeave={toggle}
+      >
         <Row name="Ethereum - Rinkeby" chainId={ChainId.ETHEREUM_RINKEBY} onSelect={onChainSelect} />
         <Row name="Arbitrum - Rinkeby" chainId={ChainId.ARBITRUM_RINKEBY} onSelect={onChainSelect} />
         <Row name="Optimism - Goerli" chainId={ChainId.OPTIMISM_GOERLI} onSelect={onChainSelect} />
