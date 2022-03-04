@@ -33,6 +33,7 @@ export const Chains: Chain[] = [
   },
 ];
 
+// https://github.com/MetaMask/metamask-extension/blob/2585f45bde6fa4ad4dc3fa17f78ef10306c1e4da/shared/constants/network.js
 // export const MAINNET_CHAIN_ID = '0x1';
 // export const ROPSTEN_CHAIN_ID = '0x3';
 // export const RINKEBY_CHAIN_ID = '0x4';
