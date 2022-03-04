@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Network from '../network/Network';
 import Account from '../account/Account';
 

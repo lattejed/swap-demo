@@ -9,7 +9,7 @@ export default function Account(): JSX.Element {
   const getProvider = useGetProvider();
   const accounts = useAccounts();
   const getAccounts = useGetAccounts();
-  const hasAccount = !!accounts?.length;
+  const mainAccount = accounts?.length ? accounts[0] : null;
 
   useEffect(() => {
     if (providerState === ProviderState.UNKNOWN) {
@@ -25,13 +25,13 @@ export default function Account(): JSX.Element {
 
   return (
     <div className="text-center">
-      {!hasAccount && (
+      {!mainAccount && (
       <button type="button" onClick={onConnect}>
         Connect MetaMask
       </button>
       )}
-      {hasAccount && (
-      <div className="w-32 truncate">{truncateAccount(accounts![0])}</div>
+      {mainAccount && (
+      <div className="w-32 truncate">{truncateAccount(mainAccount)}</div>
       )}
     </div>
   );
