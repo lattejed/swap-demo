@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { ApplicationModal, useModalOpen, useToggleModal } from '../../state/application';
 import {
-  ApplicationModal, useModalOpen, useToggleModal,
-} from '../../state/application';
+  ProviderState, useChainId, useGetChainId, useSetChainId, useProviderState,
+} from '../../state/web3';
 import useOutsideClick from '../../hooks/useOutsideClick';
-import { ChainId, DEFAULT_CHAIN_ID } from '../../constants';
+import { Chains } from '../../constants';
 
 function Row({
   name,
@@ -12,8 +12,8 @@ function Row({
   onSelect,
 }: {
   name: string,
-  chainId: number,
-  onSelect: (chainId: number) => void,
+  chainId: string,
+  onSelect: (chainId: string) => void,
 }): JSX.Element {
   return (
     <div className="hover:bg-gray-200">
@@ -31,33 +31,33 @@ export default function Network(): JSX.Element {
 
   useOutsideClick(node, open ? toggle : undefined);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentChainId = searchParams.get('chainId') || null;
+  const providerState = useProviderState();
+  const chainId = useChainId();
+  const getChainId = useGetChainId();
+  const setChainId = useSetChainId();
+
+  const onChainSelect = useCallback((nextChainId: string) => {
+    setChainId(nextChainId);
+    toggle();
+  }, [setChainId, toggle]);
 
   useEffect(() => {
-    if (currentChainId === null) {
-      setSearchParams({ chainId: DEFAULT_CHAIN_ID.toString() });
+    if (providerState === ProviderState.HAVE_PROVIDER && chainId === null) {
+      getChainId();
     }
-  }, [currentChainId, setSearchParams]);
-
-  const onChainSelect = useCallback((chainId: number) => {
-    setSearchParams({ chainId: chainId.toString() });
-    toggle();
-  }, [setSearchParams, toggle]);
+  }, [providerState, chainId, getChainId]);
 
   return (
     <div ref={node as never} className="relative">
       <button type="button" onClick={toggle}>
-        {currentChainId}
+        {chainId}
       </button>
       {open && (
       <div
         className="absolute right-0 top-10 w-64 p-5 border rounded-2xl shadow-md bg-white"
         onMouseLeave={toggle}
       >
-        <Row name="Ethereum - Rinkeby" chainId={ChainId.ETHEREUM_RINKEBY} onSelect={onChainSelect} />
-        <Row name="Arbitrum - Rinkeby" chainId={ChainId.ARBITRUM_RINKEBY} onSelect={onChainSelect} />
-        <Row name="Optimism - Goerli" chainId={ChainId.OPTIMISM_GOERLI} onSelect={onChainSelect} />
+        {Chains.map((chain) => <Row key={chain.chainId} name={chain.chainName} chainId={chain.chainId} onSelect={onChainSelect} />)}
       </div>
       )}
     </div>

@@ -5,7 +5,8 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { RootState } from '../store';
 
-let globalProvider: providers.Web3Provider | null = null;
+type Provider = providers.Web3Provider | null;
+let globalProvider: Provider = null;
 
 export enum ProviderState {
   UNKNOWN,
@@ -16,24 +17,69 @@ export enum ProviderState {
 
 export interface ApplicationState {
   providerState: ProviderState;
+  chainId: string | null,
   accounts: string[] | null,
 }
 
 const initialState: ApplicationState = {
   providerState: ProviderState.UNKNOWN,
+  chainId: null,
   accounts: null,
 };
+
+function handleNetworkChanged(
+  network: providers.Network,
+  oldNetwork: providers.Network,
+): void {
+  if (oldNetwork !== null) {
+    window.location.reload();
+  }
+}
+
+function setProvider(provider: Provider): void {
+  if (globalProvider !== null) {
+    globalProvider.removeAllListeners();
+  }
+  if (provider !== null) {
+    provider.on('network', handleNetworkChanged);
+  }
+  globalProvider = provider;
+}
 
 const getProvider = createAsyncThunk(
   'web3/getProvider',
   async (_, { rejectWithValue }) => {
     try {
+      setProvider(null);
       const provider = await detectEthereumProvider({
         mustBeMetaMask: true,
         silent: true,
         timeout: 3000,
       });
-      globalProvider = new providers.Web3Provider(provider as never);
+      setProvider(new providers.Web3Provider(provider as never, 'any'));
+      return null;
+    } catch (error) {
+      return rejectWithValue(null);
+    }
+  },
+);
+
+const getChainId = createAsyncThunk(
+  'web3/getChainId',
+  async (_, { rejectWithValue }) => {
+    try {
+      return globalProvider?.send('eth_chainId', []) as Promise<string>;
+    } catch (error) {
+      return rejectWithValue(null);
+    }
+  },
+);
+
+const setChainId = createAsyncThunk(
+  'web3/setChainId',
+  async (chainId: string, { rejectWithValue }) => {
+    try {
+      globalProvider?.send('wallet_switchEthereumChain', [{ chainId }]);
       return null;
     } catch (error) {
       return rejectWithValue(null);
@@ -60,23 +106,27 @@ export const web3Slice = createSlice({
     builder
       .addCase(getProvider.pending, (state) => {
         state.providerState = ProviderState.LOADING;
-        globalProvider = null;
       })
       .addCase(getProvider.fulfilled, (state) => {
         state.providerState = ProviderState.HAVE_PROVIDER;
       })
       .addCase(getProvider.rejected, (state) => {
         state.providerState = ProviderState.NO_PROVIDER;
-        globalProvider = null;
+      })
+      .addCase(getChainId.pending, (state) => {
+        state.chainId = null;
+      })
+      .addCase(getChainId.fulfilled, (state, action) => {
+        state.chainId = action.payload;
+      })
+      .addCase(setChainId.pending, (state) => {
+        state.chainId = null;
       })
       .addCase(getAccounts.pending, (state) => {
         state.accounts = null;
       })
       .addCase(getAccounts.fulfilled, (state, action) => {
         state.accounts = action.payload;
-      })
-      .addCase(getAccounts.rejected, (state) => {
-        state.accounts = null;
       });
   },
 });
@@ -91,6 +141,20 @@ export function useProviderState(): ProviderState {
 export function useGetProvider(): () => void {
   const dispatch = useAppDispatch();
   return useCallback(() => dispatch(getProvider()), [dispatch]);
+}
+
+export function useChainId(): string | null {
+  return useAppSelector((state: RootState) => state.web3.chainId);
+}
+
+export function useGetChainId(): () => void {
+  const dispatch = useAppDispatch();
+  return useCallback(() => dispatch(getChainId()), [dispatch]);
+}
+
+export function useSetChainId(): (chainId: string) => void {
+  const dispatch = useAppDispatch();
+  return useCallback((chainId: string) => dispatch(setChainId(chainId)), [dispatch]);
 }
 
 export function useAccounts(): string[] | null {
