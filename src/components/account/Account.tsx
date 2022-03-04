@@ -17,6 +17,12 @@ export default function Account(): JSX.Element {
     }
   }, [providerState, getProvider]);
 
+  useEffect(() => {
+    if (providerState === ProviderState.HAVE_PROVIDER && !mainAccount) {
+      getAccounts();
+    }
+  }, [providerState, mainAccount, getAccounts]);
+
   const onConnect = (): void => {
     if (providerState === ProviderState.HAVE_PROVIDER) {
       getAccounts();
