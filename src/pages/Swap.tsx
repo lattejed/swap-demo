@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
+import useSetPageTitle from '../hooks/useSetPageTitle';
 
 function Swap(): JSX.Element {
-  useEffect(() => {
-    document.title = 'Swap';
-  }, []);
+  useSetPageTitle('Swap');
 
   return (
     <div className="" />
