@@ -47,7 +47,7 @@ const getAccounts = createAsyncThunk(
     try {
       return globalProvider?.send('eth_requestAccounts', []) as Promise<string[]>;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(null);
     }
   },
 );

@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/header/Header';
 import Swap from './pages/Swap';
 
+// ProviderState.NO_PROVIDER should give a notice about requiring mm
+
 export default function App(): JSX.Element {
   return (
     <div className="">

@@ -9,6 +9,7 @@ export default function Account(): JSX.Element {
   const getProvider = useGetProvider();
   const accounts = useAccounts();
   const getAccounts = useGetAccounts();
+  const hasAccount = !!accounts?.length;
 
   useEffect(() => {
     if (providerState === ProviderState.UNKNOWN) {
@@ -16,15 +17,21 @@ export default function Account(): JSX.Element {
     }
   }, [providerState, getProvider]);
 
-  useEffect(() => {
-    if (providerState === ProviderState.HAVE_PROVIDER && accounts === null) {
+  const onConnect = (): void => {
+    if (providerState === ProviderState.HAVE_PROVIDER) {
       getAccounts();
     }
-  }, [providerState, getAccounts, accounts]);
+  };
+
   return (
     <div className="text-center">
-      {accounts && accounts.length && (
-      <div className="w-32 truncate">{truncateAccount(accounts[0])}</div>
+      {!hasAccount && (
+      <button type="button" onClick={onConnect}>
+        Connect MetaMask
+      </button>
+      )}
+      {hasAccount && (
+      <div className="w-32 truncate">{truncateAccount(accounts![0])}</div>
       )}
     </div>
   );
