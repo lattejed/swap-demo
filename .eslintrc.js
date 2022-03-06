@@ -37,6 +37,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react/prop-types': 'off',
     'no-param-reassign': ['error', { props: false }],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
   },
   settings: {
     'import/resolver': {
