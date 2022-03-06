@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import {
   ProviderState, useAccounts, useGetAccounts, useGetProvider, useProviderState,
-} from '../../state/web3';
-import truncateAccount from '../../utils/truncateAccount';
+} from '../state/web3';
+import truncateAccount from '../utils/truncateAccount';
 
 export default function Account(): JSX.Element {
   const providerState = useProviderState();

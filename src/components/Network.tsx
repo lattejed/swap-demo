@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { ApplicationModal, useModalOpen, useToggleModal } from '../../state/application';
+import { ApplicationModal, useModalOpen, useToggleModal } from '../state/application';
 import {
   ProviderState, useChainId, useGetChainId, useSetChainId, useProviderState,
-} from '../../state/web3';
-import useOutsideClick from '../../hooks/useOutsideClick';
-import { Chains } from '../../constants';
+} from '../state/web3';
+import useOutsideClick from '../hooks/useOutsideClick';
+import { Chains } from '../constants';
 
 function Row({
   name,

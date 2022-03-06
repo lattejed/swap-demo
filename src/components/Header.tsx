@@ -1,6 +1,6 @@
 import React from 'react';
-import Network from '../network/Network';
-import Account from '../account/Account';
+import Network from './Network';
+import Account from './Account';
 
 export default function Header(): JSX.Element {
   return (
