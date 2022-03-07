@@ -37,14 +37,13 @@ export default function TokenMenu({
   }, [toggle]);
 
   return (
-    <div ref={node as never} className="relative">
+    <div ref={node as never} className="">
       <button type="button" onClick={toggle}>
         ETH
       </button>
       {open && (
         <div
-          className="absolute right-0 top-10 w-64 p-5 border rounded-2xl shadow-md bg-white"
-          onMouseLeave={toggle}
+          className="absolute left-0 right-0 top-10 w-64 p-5 border rounded-2xl shadow-md bg-white"
         >
           {Tokens.map((token) => <Row key={token.id} token={token} onSelect={onTokenSelect} />)}
         </div>
