@@ -5,6 +5,8 @@ import { RootState } from '../store';
 
 export enum ApplicationModal {
   NETWORK_SELECTOR,
+  TOKEN_SELECTOR_A,
+  TOKEN_SELECTOR_B,
 }
 
 export interface ApplicationState {

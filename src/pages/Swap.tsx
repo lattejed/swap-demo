@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import useSetPageTitle from '../hooks/useSetPageTitle';
 import TokenInput from '../components/TokenInput';
+import { ApplicationModal } from '../state/application';
 
 function Swap(): JSX.Element {
   useSetPageTitle('Swap');
@@ -11,8 +12,8 @@ function Swap(): JSX.Element {
         className="p-5 border rounded-2xl shadow-md bg-white flex-col space-y-2"
       >
         <div>Swap</div>
-        <TokenInput />
-        <TokenInput />
+        <TokenInput modal={ApplicationModal.TOKEN_SELECTOR_A} />
+        <TokenInput modal={ApplicationModal.TOKEN_SELECTOR_B} />
         <div className="">1 ETH = 1 ETH</div>
         <button className="w-full h-12 border rounded-2xl" type="button">Swap</button>
       </div>

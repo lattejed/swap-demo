@@ -1,3 +1,5 @@
+import tokens from './token-list.json';
+
 export interface Chain {
   chainId: string;
   chainName: string;
@@ -8,6 +10,16 @@ export interface Chain {
   };
   rpcUrls: string[];
   blockExplorerUrls?: string[];
+}
+
+export interface Token {
+  id: string,
+  name: string,
+  address: string,
+  symbol: string,
+  decimals: number,
+  chainId: number,
+  logoURI: string,
 }
 
 export const Chains: Chain[] = [
@@ -32,6 +44,12 @@ export const Chains: Chain[] = [
     rpcUrls: [],
   },
 ];
+
+export const Tokens: Token[] = tokens.map((obj) => {
+  const token = obj as Token;
+  token.id = `${token.chainId}_${token.symbol}_${token.address}`;
+  return token;
+});
 
 // https://github.com/MetaMask/metamask-extension/blob/2585f45bde6fa4ad4dc3fa17f78ef10306c1e4da/shared/constants/network.js
 // export const MAINNET_CHAIN_ID = '0x1';
