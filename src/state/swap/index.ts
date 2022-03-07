@@ -21,12 +21,10 @@ export const swapSlice = createSlice({
   initialState,
   reducers: {
     setTokenA(state, action) {
-      const { token } = action.payload;
-      state.tokenA = token;
+      state.tokenA = action.payload;
     },
     setTokenB(state, action) {
-      const { token } = action.payload;
-      state.tokenA = token;
+      state.tokenB = action.payload;
     },
   },
 });

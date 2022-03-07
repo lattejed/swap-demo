@@ -35,6 +35,11 @@ export default function TokenMenu({
 
   useOutsideClick(node, open ? toggle : undefined);
 
+  const onSelect = useCallback((nextToken: Token) => {
+    onTokenChange(nextToken);
+    toggle();
+  }, [onTokenChange, toggle]);
+
   return (
     <div ref={node as never} className="">
       <button type="button" onClick={toggle}>
@@ -44,7 +49,7 @@ export default function TokenMenu({
         <div
           className="absolute left-0 right-0 top-10 w-64 p-5 border rounded-2xl shadow-md bg-white"
         >
-          {Tokens.map((aToken) => <Row key={aToken.id} token={aToken} onSelect={onTokenChange} />)}
+          {Tokens.map((aToken) => <Row key={aToken.id} token={aToken} onSelect={onSelect} />)}
         </div>
       )}
     </div>
