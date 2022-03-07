@@ -8,7 +8,7 @@ function Swap(): JSX.Element {
   return (
     <div className="p-10">
       <div
-        className="p-5 border rounded-2xl shadow-md bg-white"
+        className="p-5 border rounded-2xl shadow-md bg-white flex-col space-y-2"
       >
         <div>Swap</div>
         <TokenInput />
