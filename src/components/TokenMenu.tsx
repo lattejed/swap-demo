@@ -1,7 +1,12 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { ApplicationModal, useModalOpen, useToggleModal } from '../state/application';
 import useOutsideClick from '../hooks/useOutsideClick';
-import { Tokens, Token } from '../constants';
+import { Token, Tokens } from '../constants';
+import {
+  useSetTokenA, useSetTokenB, useTokenA, useTokenB,
+} from '../state/swap';
+
+export enum TokenMenuTag { A, B}
 
 function Row({
   token,
@@ -21,25 +26,37 @@ function Row({
 }
 
 export default function TokenMenu({
-  modal,
+  tag,
 }: {
-  modal: ApplicationModal
+  tag: TokenMenuTag
 }): JSX.Element {
+  const modal = tag === TokenMenuTag.A
+    ? ApplicationModal.TOKEN_SELECTOR_A
+    : ApplicationModal.TOKEN_SELECTOR_B;
   const node = useRef<HTMLDivElement>();
   const open = useModalOpen(modal);
   const toggle = useToggleModal(modal);
 
   useOutsideClick(node, open ? toggle : undefined);
 
+  const tokenA = useTokenA();
+  const tokenB = useTokenB();
+  const setTokenA = useSetTokenA();
+  const setTokenB = useSetTokenB();
+
   const onTokenSelect = useCallback((token: Token) => {
-    //
+    if (tag === TokenMenuTag.A) {
+      setTokenA(token);
+    } else {
+      setTokenB(token);
+    }
     toggle();
-  }, [toggle]);
+  }, [tag, toggle, setTokenA, setTokenB]);
 
   return (
     <div ref={node as never} className="">
       <button type="button" onClick={toggle}>
-        ETH
+        { tag === TokenMenuTag.A ? tokenA : tokenB }
       </button>
       {open && (
         <div
