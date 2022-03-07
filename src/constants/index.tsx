@@ -51,6 +51,35 @@ export const Tokens: Token[] = tokens.map((obj) => {
   return token;
 });
 
+function getTokenMatching(chainId: number, name: string): Token | undefined {
+  for (let i = 0; i < Tokens.length; i += 1) {
+    const token = Tokens[i];
+    if (token.chainId === chainId && token.name === name) {
+      return token;
+    }
+  }
+  return undefined;
+}
+
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+export function defaultTokensForChain(chainId: number): [Token, Token] {
+  switch (chainId) {
+    case 1:
+      return [
+        getTokenMatching(1, 'Wrapped Ether')!,
+        getTokenMatching(1, 'Tether USD')!,
+      ];
+    case 4:
+      return [
+        getTokenMatching(4, 'Wrapped Ether')!,
+        getTokenMatching(4, 'Dai Stablecoin')!,
+      ];
+    default:
+      throw new Error(`Bad chainId ${chainId}`);
+  }
+}
+/* eslint-enable @typescript-eslint/no-non-null-assertion */
+
 // https://github.com/MetaMask/metamask-extension/blob/2585f45bde6fa4ad4dc3fa17f78ef10306c1e4da/shared/constants/network.js
 // export const MAINNET_CHAIN_ID = '0x1';
 // export const ROPSTEN_CHAIN_ID = '0x3';

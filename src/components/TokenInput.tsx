@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import TokenMenu, { TokenMenuTag } from './TokenMenu';
+import TokenMenu from './TokenMenu';
+import { ApplicationModal } from '../state/application';
+import { Token } from '../constants';
 
 export default function TokenInput({
-  tag,
+  modal,
+  token,
+  onTokenChange,
 }: {
-  tag: TokenMenuTag
+  modal: ApplicationModal,
+  token: Token,
+  onTokenChange: (token: Token) => void,
 }): JSX.Element {
   const [value, setValue] = useState('1.000000000000000000');
 
@@ -17,7 +23,11 @@ export default function TokenInput({
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
-        <TokenMenu tag={tag} />
+        <TokenMenu
+          modal={modal}
+          token={token}
+          onTokenChange={onTokenChange}
+        />
       </div>
       <div className="text-right">Balance: 0</div>
     </div>
