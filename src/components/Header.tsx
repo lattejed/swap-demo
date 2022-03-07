@@ -1,5 +1,5 @@
 import React from 'react';
-import Network from './Network';
+import Network from './NetworkMenu';
 import Account from './Account';
 
 export default function Header(): JSX.Element {

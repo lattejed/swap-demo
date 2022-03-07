@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TokenMenu from './TokenMenu';
 
 export default function TokenInput(): JSX.Element {
   const [value, setValue] = useState('1.000000000000000000');
@@ -12,7 +13,7 @@ export default function TokenInput(): JSX.Element {
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
-        <div>ETH</div>
+        <TokenMenu />
       </div>
       <div className="text-right">Balance: 0</div>
     </div>

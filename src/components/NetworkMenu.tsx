@@ -24,7 +24,7 @@ function Row({
   );
 }
 
-export default function Network(): JSX.Element {
+export default function NetworkMenu(): JSX.Element {
   const node = useRef<HTMLDivElement>();
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR);
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR);
