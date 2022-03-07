@@ -10,12 +10,10 @@ export enum ApplicationModal {
 }
 
 export interface ApplicationState {
-  chainId: number;
   openModal: ApplicationModal | null;
 }
 
 const initialState: ApplicationState = {
-  chainId: 0,
   openModal: null,
 };
 
@@ -23,10 +21,6 @@ export const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
-    updateChainId(state, action) {
-      const { chainId } = action.payload;
-      state.chainId = chainId;
-    },
     setOpenModal(state, action) {
       state.openModal = action.payload;
     },
@@ -34,7 +28,7 @@ export const applicationSlice = createSlice({
 });
 
 export default applicationSlice.reducer;
-export const { updateChainId, setOpenModal } = applicationSlice.actions;
+const { setOpenModal } = applicationSlice.actions;
 
 export function useModalOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: RootState) => state.application.openModal);
