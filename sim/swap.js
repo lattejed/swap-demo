@@ -22,7 +22,26 @@ function lp_deposit(account, token_a, token_b) {
     global_state.k = global_state.token_a.mul(global_state.token_b)
     global_state.lp_token_holders[account] = new Decimal(100)
     global_state.lp_tokens_issued = global_state.lp_token_holders[account]
+    return {lp_tokens: global_state.lp_token_holders[account]}
   }
+  else {
+    // try % of k
+    token_a = new Decimal(token_a)
+    token_b = new Decimal(token_b)
+    let lp_tokens = global_state.lp_tokens_issued.div(token_a.mul(token_b).div(global_state.k))
+    global_state.token_a = global_state.token_a.add(token_a)
+    global_state.token_b = global_state.token_b.add(token_b)
+    global_state.k = global_state.token_a.mul(global_state.token_b)
+    global_state.lp_token_holders[account] = (global_state.lp_token_holders[account] ?? new Decimal(0)).add(lp_tokens)
+    global_state.lp_tokens_issued = global_state.lp_tokens_issued.add(lp_tokens)
+    return {lp_tokens: lp_tokens}
+  }
+}
+
+function lp_withdraw(account, lp_tokens) {
+  assert(global_state.lp_token_holders[account] >= lp_tokens)
+
+  
 }
 
 function swap(token_symbol, token) {
@@ -31,7 +50,7 @@ function swap(token_symbol, token) {
 
   token = new Decimal(token)
 
-  let fee = new Decimal(1) // 0.997
+  let fee = new Decimal(0.997) // 0.997
 
   if (token_symbol === global_state.token_b_symbol) {
     let token_a = global_state.token_a.sub(global_state.k.div(global_state.token_b.add(token.mul(fee))))
@@ -73,7 +92,10 @@ let count = 0
 for (let i=0; i<lines.length; i++) {
   let line = lines[i].split(' ')
   let repeat = 1
-  if (line[0] === '%') {
+  if (line[0] === '#') {
+    continue
+  }
+  else if (line[0] === '%') {
     repeat = parseInt(line[1], 10)
     line = line.slice(2)
   }

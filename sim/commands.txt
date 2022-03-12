@@ -1,2 +1,6 @@
-lp_deposit ACCOUNT_M 1000000 1000000
-% 100 ! swap USDT 100 ; ! price DAI ; ! swap DAI 100 ; ! price USDT
+! lp_deposit ACCOUNT_M 1000000 1000000
+! dump
+! lp_deposit ACCOUNT_N 1000000 1000000
+! dump
+# % 100 ! swap USDT 100 ; ! price DAI ; ! swap DAI 100 ; ! price USDT
+# ! dump
