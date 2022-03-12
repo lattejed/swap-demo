@@ -39,9 +39,19 @@ function lp_deposit(account, token_a, token_b) {
 }
 
 function lp_withdraw(account, lp_tokens) {
-  assert(global_state.lp_token_holders[account] >= lp_tokens)
 
-  
+  lp_tokens = new Decimal(lp_tokens)
+  assert(global_state.lp_token_holders[account].greaterThanOrEqualTo(lp_tokens))
+
+  let pool_pct = lp_tokens.div(global_state.lp_tokens_issued)
+  let token_a = global_state.token_a.mul(pool_pct)
+  let token_b = global_state.token_b.mul(pool_pct)
+  global_state.token_a = global_state.token_a.sub(token_a)
+  global_state.token_b = global_state.token_b.sub(token_b)
+  global_state.k = global_state.token_a.mul(global_state.token_b)
+  global_state.lp_token_holders[account] = global_state.lp_token_holders[account].sub(lp_tokens)
+  global_state.lp_tokens_issued = global_state.lp_tokens_issued.sub(lp_tokens)
+  return {token_a: token_a, token_b: token_b}
 }
 
 function swap(token_symbol, token) {

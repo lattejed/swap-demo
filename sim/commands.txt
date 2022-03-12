@@ -2,5 +2,7 @@
 ! dump
 ! lp_deposit ACCOUNT_N 1000000 1000000
 ! dump
+! lp_withdraw ACCOUNT_M 50
+! dump
 # % 100 ! swap USDT 100 ; ! price DAI ; ! swap DAI 100 ; ! price USDT
 # ! dump
