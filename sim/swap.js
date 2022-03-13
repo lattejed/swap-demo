@@ -20,15 +20,32 @@ function lp_deposit(account, token_a, token_b) {
     global_state.token_a = new Decimal(token_a)
     global_state.token_b = new Decimal(token_b)
     global_state.k = global_state.token_a.mul(global_state.token_b)
-    global_state.lp_token_holders[account] = new Decimal(100)
+
+
+    //global_state.lp_token_holders[account] = new Decimal(100)
+    global_state.lp_token_holders[account] = global_state.token_a.mul(global_state.token_b).sqrt()
+
     global_state.lp_tokens_issued = global_state.lp_token_holders[account]
     return {lp_tokens: global_state.lp_token_holders[account]}
   }
   else {
-    // try % of k
+    // // try % of k
+    // token_a = new Decimal(token_a)
+    // token_b = new Decimal(token_b)
+    // let lp_tokens = global_state.lp_tokens_issued.div(token_a.mul(token_b).div(global_state.k))
+    // global_state.token_a = global_state.token_a.add(token_a)
+    // global_state.token_b = global_state.token_b.add(token_b)
+    // global_state.k = global_state.token_a.mul(global_state.token_b)
+    // global_state.lp_token_holders[account] = (global_state.lp_token_holders[account] ?? new Decimal(0)).add(lp_tokens)
+    // global_state.lp_tokens_issued = global_state.lp_tokens_issued.add(lp_tokens)
+    // return {lp_tokens: lp_tokens}
+
+    // try geometric mean
     token_a = new Decimal(token_a)
     token_b = new Decimal(token_b)
-    let lp_tokens = global_state.lp_tokens_issued.div(token_a.mul(token_b).div(global_state.k))
+
+    let lp_tokens = token_a.mul(token_b).sqrt()
+
     global_state.token_a = global_state.token_a.add(token_a)
     global_state.token_b = global_state.token_b.add(token_b)
     global_state.k = global_state.token_a.mul(global_state.token_b)
