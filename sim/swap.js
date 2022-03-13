@@ -83,12 +83,10 @@ function price(token_symbol) {
     || token_symbol === global_state.token_b_symbol)
 
   if (token_symbol === global_state.token_b_symbol) {
-    let token_a = global_state.token_a.sub(global_state.k.div(global_state.token_b.add(1)))
-    return token_a
+    return global_state.token_a.sub(global_state.k.div(global_state.token_b.add(1)))
   }
   else {
-    let token_b = global_state.token_b.sub(global_state.k.div(global_state.token_a.add(1)))
-    return token_b
+    return global_state.token_b.sub(global_state.k.div(global_state.token_a.add(1)))
   }
 }
 
