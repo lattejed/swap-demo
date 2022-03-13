@@ -20,8 +20,7 @@ function lp_deposit(account, token_a, token_b) {
     global_state.token_a = new Decimal(token_a)
     global_state.token_b = new Decimal(token_b)
     global_state.k = global_state.token_a.mul(global_state.token_b)
-
-
+    
     //global_state.lp_token_holders[account] = new Decimal(100)
     global_state.lp_token_holders[account] = global_state.token_a.mul(global_state.token_b).sqrt()
 
@@ -41,6 +40,7 @@ function lp_deposit(account, token_a, token_b) {
     // return {lp_tokens: lp_tokens}
 
     // try geometric mean
+    // using this gets rid of effects of a pool imbalance
     token_a = new Decimal(token_a)
     token_b = new Decimal(token_b)
 
