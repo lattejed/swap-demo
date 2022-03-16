@@ -11,7 +11,7 @@ solc:; solc-select install 0.8.10 && solc-select use 0.8.10
 clean:; forge clean
 
 # Remove modules
-remove:; rm -rf .gitmodules && rm -rf .git/modules/* && rm -rf lib && touch .gitmodules && git add . && git commit -m "Removed submodules"
+# remove:; rm -rf .gitmodules && rm -rf .git/modules/* && rm -rf lib && touch .gitmodules && git add . && git commit -m "Removed submodules"
 
 # Install the Modules
 install:; forge install dapphub/ds-test && forge install rari-capital/solmate && forge install brockelmore/forge-std
