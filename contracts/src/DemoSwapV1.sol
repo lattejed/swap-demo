@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import { ERC20 } from "solmate/tokens/ERC20.sol";
+import { IERC20 } from "openzeppelin-contracts/interfaces/IERC20.sol";
 
 /// @title DemoSwapV1
 /// @author Matthew Wiriyathananon-Smith <m@lattejed.com>
