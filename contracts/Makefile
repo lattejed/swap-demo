@@ -18,6 +18,7 @@ gas-snapshot:; forge clean && forge snapshot --optimize --optimize-runs 1000000
 
 clean:; forge clean
 
-fork-mainnet:; npx hardhat node --fork ${ETH_MAINNET_RPC_URL}
-
 chmod-scripts:; chmod +x ./scripts/*
+
+# hardhat
+fork-eth-rinkeby:; npx hardhat node --fork ${ETH_RINKEBY_RPC_URL} --fork-block-number ${ETH_RINKEBY_BLOCK}

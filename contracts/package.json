@@ -25,7 +25,7 @@
     "test": "make test",
     "gas-snapshot": "make gas-snapshot",
     "clean": "make clean",
-    "fork-mainnet": "make fork-mainnet",
+    "fork-eth-rinkeby": "make fork-eth-rinkeby",
     "chmod-scripts": "make chmod-scripts"
   }
 }
