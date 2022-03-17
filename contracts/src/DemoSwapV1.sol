@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.10;
 
-import { ERC20 } from "solmate/tokens/ERC20.sol";
-
 /// @title DemoSwapV1
 /// @author Matthew Wiriyathananon-Smith <m@lattejed.com>
 /// @notice This is a contract similar to Uniswap V1 developed from first principles.
