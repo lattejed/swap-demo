@@ -10,6 +10,4 @@ contract DemoSwapV1Test is DSTestPlus {
   function setUp() public {
     _demoSwap = new DemoSwapV1();
   }
-
-  function test_() public {}
 }
