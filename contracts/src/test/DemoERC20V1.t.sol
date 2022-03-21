@@ -25,4 +25,9 @@ contract DemoERC20V1Test is DSTestPlus {
     _token.mint(address(_owner), 1e18);
     assertEq(_token.balanceOf(address(_owner)), 1e18);
   }
+
+  function testBadMint() public {
+    vm.expectRevert(DemoERC20V1.InvalidSenderAddress.selector);
+    _token.mint(address(_owner), 1e18);
+  }
 }
