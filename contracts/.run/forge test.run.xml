@@ -6,7 +6,10 @@
       <script value="test" />
     </scripts>
     <node-interpreter value="project" />
-    <envs />
+    <envs>
+      <env name="_RUST_LOG" value="forge=trace" />
+      <env name="_RUST_BACKTRACE" value="1" />
+    </envs>
     <method v="2" />
   </configuration>
 </component>
