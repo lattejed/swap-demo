@@ -9,13 +9,19 @@ import { ERC20 } from "solmate/tokens/ERC20.sol";
 /// @notice to rely on existing tokens on whatever testnet(s) we're using.
 /// @dev This is meant to be a learning exercise for the author. Do not use this in production.
 contract DemoERC20V1 is ERC20 {
+  address payable private _owner;
+
   constructor(
     string memory _name,
     string memory _symbol,
-    uint8 _decimals
-  ) ERC20(_name, _symbol, _decimals) {}
+    uint8 _decimals,
+    address payable owner_
+  ) ERC20(_name, _symbol, _decimals) {
+    _owner = owner_;
+  }
 
   function mint(address to, uint256 value) public virtual {
+    require(msg.sender == _owner);
     _mint(to, value);
   }
 }
