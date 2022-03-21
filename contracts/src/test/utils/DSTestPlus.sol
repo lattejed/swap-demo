@@ -7,10 +7,10 @@ import { stdCheats, stdError } from "forge-std/stdlib.sol";
 import { Vm } from "forge-std/Vm.sol";
 
 contract DSTestPlus is DSTest, stdCheats {
-  /// @dev Use forge-std Vm logic
-  Vm public constant vm = Vm(HEVM_ADDRESS);
+    /// @dev Use forge-std Vm logic
+    Vm public constant vm = Vm(HEVM_ADDRESS);
 
-  function _assertERC20Eq(ERC20 erc1, ERC20 erc2) internal {
-    assertEq(address(erc1), address(erc2));
-  }
+    function _assertERC20Eq(ERC20 erc1, ERC20 erc2) internal {
+        assertEq(address(erc1), address(erc2));
+    }
 }
