@@ -25,7 +25,7 @@
     "install-solc": "make install-solc",
     "lint": "make lint",
     "build": "make build",
-    "test": "make test",
+    "test": "clear && make test",
     "gas-snapshot": "make gas-snapshot",
     "clean": "make clean",
     "fork-eth-rinkeby": "make fork-eth-rinkeby",
