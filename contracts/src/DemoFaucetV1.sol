@@ -12,25 +12,26 @@ contract DemoFaucetV1 {
     /// The `msg.sender` has already claimed max tokens
     error MaxTokensClaimed();
 
-    uint256 constant TOKEN_CLAIM_AMT = 1e6;
-    uint256 constant TOKEN_CLAIM_AMT_MAX = 1e18;
+    uint256 constant _CLAIM_AMOUNT = 1e6;
+    uint256 constant _CLAIM_AMOUNT_MAX = 1e18;
 
     ERC20 private _token;
     address payable private _owner;
-    mapping(address => uint256) private _claimedTokens;
+    mapping(address => bool) private _approvedAddresses;
 
     constructor(ERC20 token_, address payable owner_) {
         _token = token_;
         _owner = owner_;
     }
 
-    /// Allow any address to claim token up to MAX
-    /// @notice If AMT isn't a multiple of MAX, allows claiming > MAX
+    /// Allow any address to claim tokens up to MAX
+    /// @dev This assumes that AMT is a multiple of MAX. If not, total claimable will be < MAX.
     function claim() external {
-        if (_claimedTokens[msg.sender] >= TOKEN_CLAIM_AMT_MAX) {
-            revert MaxTokensClaimed();
+        if (_approvedAddresses[msg.sender] == false) {
+            _approvedAddresses[msg.sender] = true;
+            _token.approve(msg.sender, _CLAIM_AMOUNT_MAX);
         }
-        _claimedTokens += TOKEN_CLAIM_AMT;
-        // transfer
+        // We will ignore the return value since this will revert if allowance < AMT
+        _token.transferFrom(_owner, msg.sender, _CLAIM_AMOUNT);
     }
 }
