@@ -23,7 +23,7 @@ contract DemoFaucetV1 {
     }
 
     /// Allow any address to claim tokens up to MAX
-    /// @dev This assumes that AMT is a multiple of MAX. If not, total claimable will be > MAX.
+    /// @dev This assumes that MAX is a multiple of AMT. If not, total claimable will be > MAX.
     function claim() external {
         if (_claimedAmounts[msg.sender] >= _CLAIM_AMOUNT_MAX) {
             revert MaxTokensClaimed();
