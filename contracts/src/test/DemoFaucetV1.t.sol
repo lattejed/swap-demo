@@ -15,7 +15,13 @@ contract DemoFaucetV1Test is DSTestPlus {
         _owner = payable(vm.addr(0xCA55E77E));
         _user = payable(vm.addr(0xDECAFBAD));
         _token = new DemoERC20V1("Token", "TOK", 18, _owner);
-        _faucet = new DemoFaucetV1(_token, _owner);
+        _faucet = new DemoFaucetV1(_token);
+        vm.prank(_owner);
+        _token.mint(address(_faucet), type(uint256).max);
+    }
+
+    function testMint() public {
+        assertEq(_token.balanceOf(address(_faucet)), type(uint256).max);
     }
 
     //    function testClaim() public {
