@@ -10,7 +10,7 @@ contract DemoERC20V1Test is DSTestPlus {
 
     function setUp() public {
         _owner = payable(vm.addr(0xCA55E77E));
-        _token = new DemoERC20V1("Token", "TOK", 18, _owner, 1e18);
+        _token = new DemoERC20V1("Token", "TOK", 18, _owner);
     }
 
     function testInvariantMetadata() public {
@@ -20,10 +20,10 @@ contract DemoERC20V1Test is DSTestPlus {
     }
 
     function testMint() public {
-        assertEq(_token.balanceOf(address(_owner)), 1e18);
+        assertEq(_token.balanceOf(address(_owner)), 0);
         vm.prank(_owner);
         _token.mint(address(_owner), 1e18);
-        assertEq(_token.balanceOf(address(_owner)), 2e18);
+        assertEq(_token.balanceOf(address(_owner)), 1e18);
     }
 
     function testBadMint() public {

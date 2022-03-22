@@ -18,11 +18,9 @@ contract DemoERC20V1 is ERC20 {
         string memory _name,
         string memory _symbol,
         uint8 _decimals,
-        address payable owner_,
-        uint256 _initialSupply
+        address payable owner_
     ) ERC20(_name, _symbol, _decimals) {
         _owner = owner_;
-        _mint(owner_, _initialSupply);
     }
 
     function mint(address to, uint256 value) public virtual {
