@@ -8,7 +8,7 @@ update-libs:; forge update
 
 install-solc:; solc-select install 0.8.10 && solc-select use 0.8.10
 
-lint:; solhint --fix 'src/**/*.sol'
+lint:; solhint 'src/**/*.sol'
 
 build:; forge clean && forge build --optimize --optimize-runs 1000000
 
