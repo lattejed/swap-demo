@@ -23,6 +23,8 @@ contract DemoFaucetV1 {
     }
 
     /// Allow any address to claim tokens up to MAX
+    /// @notice We can safely ignore the amount claimed for all users since we'll be minting
+    /// @notice type(uint256).max tokens. It would just revert anyway.
     /// @dev This assumes that MAX is a multiple of AMT. If not, total claimable will be > MAX.
     function claim() external {
         if (_claimedAmounts[msg.sender] >= _CLAIM_AMOUNT_MAX) {
