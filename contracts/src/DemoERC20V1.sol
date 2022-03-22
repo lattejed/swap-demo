@@ -10,7 +10,7 @@ import {ERC20} from "solmate/tokens/ERC20.sol";
 /// @dev This is meant to be a learning exercise for the author. Do not use this in production.
 contract DemoERC20V1 is ERC20 {
     /// The `msg.sender` was not an authorized address
-    error InvalidSenderAddress();
+    error InvalidSenderAddress(address _address);
 
     address payable private _owner;
 
@@ -24,7 +24,7 @@ contract DemoERC20V1 is ERC20 {
     }
 
     function mint(address to, uint256 value) public virtual {
-        if (msg.sender != _owner) revert InvalidSenderAddress();
+        if (msg.sender != _owner) revert InvalidSenderAddress(msg.sender);
         _mint(to, value);
     }
 }

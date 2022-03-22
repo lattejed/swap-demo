@@ -27,7 +27,12 @@ contract DemoERC20V1Test is DSTestPlus {
     }
 
     function testBadMint() public {
-        vm.expectRevert(DemoERC20V1.InvalidSenderAddress.selector);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                DemoERC20V1.InvalidSenderAddress.selector,
+                address(this)
+            )
+        );
         _token.mint(address(_owner), 1e18);
     }
 }
