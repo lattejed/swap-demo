@@ -18,6 +18,12 @@ contract DemoFaucetV1Test is DSTestPlus {
         _faucet = new DemoFaucetV1(_token);
         VM.prank(_owner);
         _token.mint(address(_faucet), type(uint256).max);
+
+        VM.label(address(this), "test");
+        VM.label(_owner, "owner");
+        VM.label(_user, "user");
+        VM.label(address(_token), "token");
+        VM.label(address(_faucet), "faucet");
     }
 
     function testMint() public {
