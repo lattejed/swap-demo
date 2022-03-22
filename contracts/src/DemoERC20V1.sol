@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.10 <0.9.0;
 
-import {ERC20} from "solmate/tokens/ERC20.sol";
+import {ERC20} from "@solmate/tokens/ERC20.sol";
 
 /// The `msg.sender` was not an authorized address
 error InvalidSenderAddress(address _address);
@@ -9,7 +9,7 @@ error InvalidSenderAddress(address _address);
 /// @title DemoERC20V1
 /// @author Matthew Wiriyathananon-Smith <m@lattejed.com>
 /// @notice This is a dummy ERC20 we're going to use for our demo so we don't have
-/// @notice to rely on existing tokens on whatever testnet(s) we're using.
+/// to rely on existing tokens on whatever testnet(s) we're using.
 /// @dev This is meant to be a learning exercise for the author. Do not use this in production.
 contract DemoERC20V1 is ERC20 {
     address payable private _owner;
