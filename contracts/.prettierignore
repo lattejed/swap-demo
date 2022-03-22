@@ -5,4 +5,4 @@ lib/
 cache/
 assets/
 node_modules/
-.run/
+.idea/
