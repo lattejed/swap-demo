@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity ^0.8.10;
+pragma solidity >=0.8.10 <0.9.0;
 
 import {DemoERC20V1} from "./DemoERC20V1.sol";
+
+/// The `msg.sender` already claimed >= MAX tokens
+error MaxTokensClaimed();
 
 /// @title DemoFaucetV1
 /// @author Matthew Wiriyathananon-Smith <m@lattejed.com>
@@ -9,9 +12,6 @@ import {DemoERC20V1} from "./DemoERC20V1.sol";
 /// @notice dummy ERC20s to users for live testing of our demo.
 /// @dev This is meant to be a learning exercise for the author. Do not use this in production.
 contract DemoFaucetV1 {
-    /// The `msg.sender` already claimed >= MAX tokens
-    error MaxTokensClaimed();
-
     uint256 private constant _CLAIM_AMOUNT = 100 * 1e18;
     uint256 private constant _CLAIM_AMOUNT_MAX = 1000 * 1e18;
 

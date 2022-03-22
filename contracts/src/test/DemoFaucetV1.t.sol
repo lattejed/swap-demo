@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity ^0.8.10;
+pragma solidity >=0.8.10 <0.9.0;
 
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
 import {DemoERC20V1} from "../DemoERC20V1.sol";
-import {DemoFaucetV1} from "../DemoFaucetV1.sol";
+import {DemoFaucetV1, MaxTokensClaimed} from "../DemoFaucetV1.sol";
 
 contract DemoFaucetV1Test is DSTestPlus {
     address payable private _owner;
@@ -12,11 +12,11 @@ contract DemoFaucetV1Test is DSTestPlus {
     DemoFaucetV1 private _faucet;
 
     function setUp() public {
-        _owner = payable(vm.addr(0xCA55E77E));
-        _user = payable(vm.addr(0xDECAFBAD));
+        _owner = payable(VM.addr(0xCA55E77E));
+        _user = payable(VM.addr(0xDECAFBAD));
         _token = new DemoERC20V1("Token", "TOK", 18, _owner);
         _faucet = new DemoFaucetV1(_token);
-        vm.prank(_owner);
+        VM.prank(_owner);
         _token.mint(address(_faucet), type(uint256).max);
     }
 
@@ -26,14 +26,14 @@ contract DemoFaucetV1Test is DSTestPlus {
 
     function testClaim() public {
         assertEq(_token.balanceOf(address(_user)), 0);
-        vm.prank(_user);
+        VM.prank(_user);
         _faucet.claim();
         assertEq(_token.balanceOf(address(_user)), 100 * 1e18);
     }
 
     function testClaimAll() public {
         for (uint256 i = 0; i < 10; i++) {
-            vm.prank(_user);
+            VM.prank(_user);
             _faucet.claim();
         }
         assertEq(_token.balanceOf(address(_user)), 1000 * 1e18);
@@ -41,11 +41,11 @@ contract DemoFaucetV1Test is DSTestPlus {
 
     function testClaimTooMuch() public {
         for (uint256 i = 0; i < 10; i++) {
-            vm.prank(_user);
+            VM.prank(_user);
             _faucet.claim();
         }
-        vm.expectRevert(DemoFaucetV1.MaxTokensClaimed.selector);
-        vm.prank(_user);
+        VM.expectRevert(MaxTokensClaimed.selector);
+        VM.prank(_user);
         _faucet.claim();
     }
 }
