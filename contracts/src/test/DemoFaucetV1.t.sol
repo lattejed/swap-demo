@@ -31,8 +31,21 @@ contract DemoFaucetV1Test is DSTestPlus {
         assertEq(_token.balanceOf(address(_user)), 100 * 1e18);
     }
 
-    //    function testBadMint() public {
-    //        vm.expectRevert(DemoERC20V1.InvalidSenderAddress.selector);
-    //        _token.mint(address(_owner), 1e18);
-    //    }
+    function testClaimAll() public {
+        for (uint256 i = 0; i < 10; i++) {
+            vm.prank(_user);
+            _faucet.claim();
+        }
+        assertEq(_token.balanceOf(address(_user)), 1000 * 1e18);
+    }
+
+    function testClaimTooMuch() public {
+        for (uint256 i = 0; i < 10; i++) {
+            vm.prank(_user);
+            _faucet.claim();
+        }
+        vm.expectRevert(DemoFaucetV1.MaxTokensClaimed.selector);
+        vm.prank(_user);
+        _faucet.claim();
+    }
 }
