@@ -44,7 +44,7 @@ contract DemoSwapV1 {
         /// Full disclosure: I picked up reading about CPMMs that LP tokens are (always?)
         /// calculated by taking the geometric mean of the deposited tokens. While simming
         /// it shows that it works, despite token imbalances, I don't know why it's correct
-        /// of what the intuition for it is.
+        /// or what the intuition for it is.
         ///
         /// The only thing that makes a geometric mean unique mathematically is that
         /// gm(x/y) == gm(x)/gm(y) which means a geometric mean is correct when averaging
@@ -52,6 +52,9 @@ contract DemoSwapV1 {
         ///
         /// We can probably just use a product here with the same results. Or possibly
         /// another type of average.
+
+        // TODO: Test different methods for calculating `tokenLPAmt` and figure out if
+        // geometric mean is the only correct way
         uint256 tokenLPAmt = FixedPointMathLib.sqrt(_tokenAAmt * _tokenBAmt);
     }
 }
