@@ -2,9 +2,10 @@
 pragma solidity >=0.8.10 <0.9.0;
 
 import {DemoERC20V1} from "./DemoERC20V1.sol";
+import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 
-/// The `msg.sender` did not have enough TOK for tx
-error InsufficientTokens(string _symbol);
+// /// The `msg.sender` did not have enough TOK for tx
+// error InsufficientTokens(string _symbol);
 
 /// @title DemoSwapV1
 /// @author Matthew Wiriyathananon-Smith <m@lattejed.com>
@@ -12,6 +13,11 @@ error InsufficientTokens(string _symbol);
 /// It is not an attempt to recreate Uniswap V1 in its entirety or guess what
 /// the actual implementation looks like. This is meant to work for the stated
 /// purpose while being 1) correct and 2) secure. This contains no gas optimizations.
+///
+/// This main source for this is https://web.stanford.edu/~guillean/papers/uniswap_analysis.pdf
+/// and https://www.machow.ski/posts/an_introduction_to_automated_market_makers/ along with
+/// various other blog posts about CPMMs.
+///
 /// @dev This is meant to be a learning exercise for the author. Do not use this in production.
 contract DemoSwapV1 {
     DemoERC20V1 private _tokenA;
@@ -28,7 +34,24 @@ contract DemoSwapV1 {
     /// @notice This of course requires `ERC20.approve` to have been called previously
     /// for AMT >= deposit AMT
     function deposit(uint256 _tokenAAmt, uint256 _tokenBAmt) external {
+        /// We're not going to do any value checking here because
+        /// - The client should deal with providing correct amounts
+        /// - There's nothing malicious that can be done here, apart from
+        ///   throwing money away as an arb opportunity
         _tokenA.transferFrom(msg.sender, address(this), _tokenAAmt);
         _tokenB.transferFrom(msg.sender, address(this), _tokenBAmt);
+
+        /// Full disclosure: I picked up reading about CPMMs that LP tokens are (always?)
+        /// calculated by taking the geometric mean of the deposited tokens. While simming
+        /// it shows that it works, despite token imbalances, I don't know why it's correct
+        /// of what the intuition for it is.
+        ///
+        /// The only thing that makes a geometric mean unique mathematically is that
+        /// gm(x/y) == gm(x)/gm(y) which means a geometric mean is correct when averaging
+        /// normalized results.
+        ///
+        /// We can probably just use a product here with the same results. Or possibly
+        /// another type of average.
+        uint256 tokenLPAmt = FixedPointMathLib.sqrt(_tokenAAmt * _tokenBAmt);
     }
 }
