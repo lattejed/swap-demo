@@ -83,14 +83,12 @@ function swap(token_symbol, token) {
     let token_a = global_state.token_a.sub(global_state.k.div(global_state.token_b.add(token.mul(fee))))
     global_state.token_a = global_state.token_a.sub(token_a)
     global_state.token_b = global_state.token_b.add(token)
-    global_state.k = global_state.token_a.mul(global_state.token_b)
     return {token_a: token_a, slippage: new Decimal(1).sub(token_a.div(token)).mul(100)}
   }
   else {
     let token_b = global_state.token_b.sub(global_state.k.div(global_state.token_a.add(token.mul(fee))))
     global_state.token_b = global_state.token_b.sub(token_b)
     global_state.token_a = global_state.token_a.add(token)
-    global_state.k = global_state.token_a.mul(global_state.token_b)
     return {token_b: token_b, slippage: new Decimal(1).sub(token_b.div(token)).mul(100)}
   }
 }
