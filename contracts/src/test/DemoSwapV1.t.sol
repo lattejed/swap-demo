@@ -37,7 +37,10 @@ contract DemoSwapV1Test is DSTestPlus {
     }
 
     function testDeposit() public {
-        VM.prank(_user);
+        VM.startPrank(_user);
+        _tokenA.approve(address(_swap), 100 * 1e18);
+        _tokenB.approve(address(_swap), 100 * 1e18);
         _swap.deposit(100 * 1e18, 100 * 1e18);
+        VM.stopPrank();
     }
 }
