@@ -24,7 +24,7 @@ contract DemoSwapV1 {
         _tokenB = tokenB_;
     }
 
-    /// Deposit token pair and receive LP tokens
+    /// Deposit tokens in a pair and receive LP tokens
     /// @notice This of course requires `ERC20.approve` to have been called previously
     /// for AMT >= deposit AMT
     function deposit(uint256 _tokenAAmt, uint256 _tokenBAmt) external {
