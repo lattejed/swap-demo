@@ -38,18 +38,20 @@ contract DemoFaucetV1Test is DSTestPlus {
     }
 
     function testClaimAll() public {
+        VM.startPrank(_user);
         for (uint256 i = 0; i < 10; i++) {
-            VM.prank(_user);
             _faucet.claim();
         }
+        VM.stopPrank();
         assertEq(_token.balanceOf(address(_user)), 1000 * 1e18);
     }
 
     function testClaimTooMuch() public {
+        VM.startPrank(_user);
         for (uint256 i = 0; i < 10; i++) {
-            VM.prank(_user);
             _faucet.claim();
         }
+        VM.stopPrank();
         VM.expectRevert(MaxTokensClaimed.selector);
         VM.prank(_user);
         _faucet.claim();
