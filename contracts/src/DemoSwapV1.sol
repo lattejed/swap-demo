@@ -131,6 +131,8 @@ contract DemoSwapV1 is DSTestPlus {
     }
 
     /// Do the actual swap
+    // TODO: This will accept a swap when the pool is empty which results
+    // in an infinite price.
     function _swap(
         DemoERC20V1 token1,
         DemoERC20V1 token2,
