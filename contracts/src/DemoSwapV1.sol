@@ -25,9 +25,21 @@ contract DemoSwapV1 {
     DemoERC20V1 private _tokenLP;
     uint256 private _k;
 
-    constructor(DemoERC20V1 tokenA_, DemoERC20V1 tokenB_) {
+    constructor(
+        DemoERC20V1 tokenA_,
+        DemoERC20V1 tokenB_,
+        string memory _name,
+        string memory _symbol,
+        uint8 _decimals
+    ) {
         _tokenA = tokenA_;
         _tokenB = tokenB_;
+        _tokenLP = new DemoERC20V1(
+            _name,
+            _symbol,
+            _decimals,
+            payable(address(this))
+        );
     }
 
     /// Deposit tokens in a pair and receive LP tokens
@@ -58,5 +70,12 @@ contract DemoSwapV1 {
         // TODO: Test different methods for calculating `tokenLPAmt` and figure out if
         // geometric mean is the only correct way
         uint256 tokenLPAmt = FixedPointMathLib.sqrt(_tokenAAmt * _tokenBAmt);
+
+        /// Mint LP tokens
+        _tokenLP.mint(msg.sender, tokenLPAmt);
+    }
+
+    function getLPToken() external view returns (DemoERC20V1) {
+        return _tokenLP;
     }
 }
