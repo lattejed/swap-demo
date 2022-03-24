@@ -4,6 +4,7 @@ pragma solidity >=0.8.10 <0.9.0;
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
 import {DemoSwapV1} from "../DemoSwapV1.sol";
 import {DemoERC20V1} from "../DemoERC20V1.sol";
+import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 
 contract DemoSwapV1Test is DSTestPlus {
     address payable private _owner;
@@ -44,5 +45,21 @@ contract DemoSwapV1Test is DSTestPlus {
         _swap.deposit(100 * 1e18, 100 * 1e18);
         VM.stopPrank();
         assertEq(_swap.lpToken().balanceOf(_user), 100 * 1e18);
+    }
+
+    function testDeposit(uint256 _tokenAAmt, uint256 _tokenBAmt) public {
+        // TODO: Do we want to handle 0 input explicitly?
+        // We *will* get overflows for very large amounts so let's limit them
+        VM.assume(_tokenAAmt > 0 && _tokenAAmt <= 100 * 1e18);
+        VM.assume(_tokenBAmt > 0 && _tokenBAmt <= 100 * 1e18);
+        VM.startPrank(_user);
+        _tokenA.approve(address(_swap), _tokenAAmt);
+        _tokenB.approve(address(_swap), _tokenBAmt);
+        _swap.deposit(_tokenAAmt, _tokenBAmt);
+        VM.stopPrank();
+        assertEq(
+            _swap.lpToken().balanceOf(_user),
+            FixedPointMathLib.sqrt(_tokenAAmt * _tokenBAmt)
+        );
     }
 }
