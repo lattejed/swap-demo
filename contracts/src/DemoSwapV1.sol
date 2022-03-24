@@ -46,6 +46,23 @@ contract DemoSwapV1 is DSTestPlus {
         );
     }
 
+    function swap(address _token, uint256 _amount) external {
+        if (_token == address(_tokenA)) {
+            _tokenA.transferFrom(msg.sender, address(this), _amount);
+            _tokenB.transfer(
+                msg.sender,
+                FixedPointMathLib.divWadUp(_k, _amount)
+            );
+        }
+        if (_token == address(_tokenB)) {
+            _tokenB.transferFrom(msg.sender, address(this), _amount);
+            _tokenA.transfer(
+                msg.sender,
+                FixedPointMathLib.divWadUp(_k, _amount)
+            );
+        }
+    }
+
     /// Deposit tokens in a pair and receive LP tokens
     /// @notice This of course requires `ERC20.approve` to have been called previously
     /// for AMT >= deposit AMT
