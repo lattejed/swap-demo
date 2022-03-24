@@ -50,7 +50,7 @@ contract DemoSwapV1 {
         /// We're not going to do any value checking here because
         /// - The client should deal with providing correct amounts
         /// - There's nothing malicious that can be done here, apart from
-        ///   throwing money away
+        ///   throwing an error or throwing money away
         _tokenA.transferFrom(msg.sender, address(this), _tokenAAmt);
         _tokenB.transferFrom(msg.sender, address(this), _tokenBAmt);
 
