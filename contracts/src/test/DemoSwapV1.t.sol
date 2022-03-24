@@ -48,10 +48,9 @@ contract DemoSwapV1Test is DSTestPlus {
     }
 
     function testDeposit(uint256 _tokenAAmt, uint256 _tokenBAmt) public {
-        // TODO: Do we want to handle 0 input explicitly?
         // We *will* get overflows for very large amounts so let's limit them
-        VM.assume(_tokenAAmt > 0 && _tokenAAmt <= 1e12 * 1e18);
-        VM.assume(_tokenBAmt > 0 && _tokenBAmt <= 1e12 * 1e18);
+        VM.assume(_tokenAAmt <= 1e12 * 1e18);
+        VM.assume(_tokenBAmt <= 1e12 * 1e18);
         VM.startPrank(_user);
         _tokenA.approve(address(_swap), _tokenAAmt);
         _tokenB.approve(address(_swap), _tokenBAmt);
