@@ -60,6 +60,17 @@ contract DemoSwapV1Test is DSTestPlus {
         _swap.swapA(0);
     }
 
+    function testSwapFuzz(uint256 _swapAmt) public {
+        _deposit(1e12 * 1e18, 1e12 * 1e18);
+        VM.prank(_owner);
+        _tokenA.mint(_user, _swapAmt);
+        VM.startPrank(_user);
+        _tokenA.approve(address(_swap), _swapAmt);
+        _swap.swapA(_swapAmt);
+        VM.stopPrank();
+        // assertEq(_tokenB.balanceOf(_user), outAmt);
+    }
+
     function testDeposit() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
         assertEq(_tokenA.balanceOf(_lp1), 0);
