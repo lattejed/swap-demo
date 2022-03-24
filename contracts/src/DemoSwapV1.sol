@@ -46,27 +46,23 @@ contract DemoSwapV1 is DSTestPlus {
         );
     }
 
-    function swap(address _token, uint256 _amount) external {
-        DemoERC20V1 token1;
-        DemoERC20V1 token2;
-        if (_token == address(_tokenA)) {
-            token1 = _tokenA;
-            token2 = _tokenB;
-        }
-        if (_token == address(_tokenB)) {
-            token1 = _tokenB;
-            token2 = _tokenA;
-        }
-        /// This will fail if given an invalid token address
-        token1.transferFrom(msg.sender, address(this), _amount);
-        uint256 token2Amt = token2.balanceOf(address(this)) -
-            FixedPointMathLib.divWadUp(_k, token1.balanceOf(address(this)));
-        token2.transfer(msg.sender, token2Amt);
+    /// Swap tokenA for tokenB
+    /// @param _amount of tokenA to swap
+    function swapA(uint256 _amount) external {
+        _swap(_tokenA, _tokenB, _amount);
+    }
+
+    /// Swap tokenB for tokenA
+    /// @param _amount of tokenB to swap
+    function swapB(uint256 _amount) external {
+        _swap(_tokenB, _tokenA, _amount);
     }
 
     /// Deposit tokens in a pair and receive LP tokens
     /// @notice This of course requires `ERC20.approve` to have been called previously
     /// for AMT >= deposit AMT
+    /// @param _tokenAAmt amount of first token to deposit
+    /// @param _tokenAAmt amount of second token to deposit
     function deposit(uint256 _tokenAAmt, uint256 _tokenBAmt) external {
         /// We're not going to do any value checking here because
         /// - The client should deal with providing correct amounts
@@ -132,5 +128,16 @@ contract DemoSwapV1 is DSTestPlus {
             _tokenA.balanceOf(address(this)),
             _tokenB.balanceOf(address(this))
         );
+    }
+
+    function _swap(
+        DemoERC20V1 token1,
+        DemoERC20V1 token2,
+        uint256 _amount
+    ) private {
+        token1.transferFrom(msg.sender, address(this), _amount);
+        uint256 token2Amt = token2.balanceOf(address(this)) -
+            FixedPointMathLib.divWadUp(_k, token1.balanceOf(address(this)));
+        token2.transfer(msg.sender, token2Amt);
     }
 }

@@ -49,7 +49,7 @@ contract DemoSwapV1Test is DSTestPlus {
         _tokenA.mint(_user, inAmt);
         VM.startPrank(_user);
         _tokenA.approve(address(_swap), inAmt);
-        _swap.swap(address(_tokenA), inAmt);
+        _swap.swapA(inAmt);
         VM.stopPrank();
         assertEq(_tokenB.balanceOf(_user), outAmt);
     }
