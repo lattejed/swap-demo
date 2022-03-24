@@ -65,7 +65,16 @@ contract DemoSwapV1Test is DSTestPlus {
         assertEq(_tokenB.balanceOf(_user), 1e12 * 1e18);
     }
 
+    function testWithdrawZero() public {
+        VM.expectRevert(bytes("")); // FixedPointMathLib.divWadUp revert
+        VM.prank(_user);
+        _swap.withdraw(0);
+    }
+
     function testWithdrawFuzz(uint256 _tokenAAmt, uint256 _tokenBAmt) public {
+        // testWithdrawZero handles a zero withdrawal
+        VM.assume(_tokenAAmt > 0);
+        VM.assume(_tokenBAmt > 0);
         // We *will* get overflows for very large amounts so let's limit them
         VM.assume(_tokenAAmt <= 1e12 * 1e18);
         VM.assume(_tokenBAmt <= 1e12 * 1e18);
