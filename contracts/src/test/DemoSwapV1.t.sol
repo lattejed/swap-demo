@@ -54,6 +54,12 @@ contract DemoSwapV1Test is DSTestPlus {
         assertEq(_tokenB.balanceOf(_user), outAmt);
     }
 
+    function testSwapZero() public {
+        VM.expectRevert(ERROR_NULL);
+        VM.prank(_user);
+        _swap.swapA(0);
+    }
+
     function testDeposit() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
         assertEq(_tokenA.balanceOf(_lp1), 0);
