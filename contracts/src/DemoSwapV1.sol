@@ -82,5 +82,26 @@ contract DemoSwapV1 {
         );
     }
 
-    //function withdraw(uint256 _tokenLPAmt) external {}
+    function withdraw(uint256 _tokenLPAmt) external {
+        uint256 share = FixedPointMathLib.divWadUp(
+            lpToken.totalSupply(),
+            _tokenLPAmt
+        );
+
+        lpToken.burn(msg.sender, _tokenLPAmt);
+
+        _tokenA.transfer(
+            msg.sender,
+            FixedPointMathLib.mulWadDown(_tokenA.totalSupply(), share)
+        );
+        _tokenB.transfer(
+            msg.sender,
+            FixedPointMathLib.mulWadDown(_tokenB.totalSupply(), share)
+        );
+
+        _k = FixedPointMathLib.mulWadDown(
+            _tokenA.balanceOf(address(this)),
+            _tokenB.balanceOf(address(this))
+        );
+    }
 }

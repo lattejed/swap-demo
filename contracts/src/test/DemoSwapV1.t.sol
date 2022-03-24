@@ -44,10 +44,12 @@ contract DemoSwapV1Test is DSTestPlus {
         _tokenB.approve(address(_swap), 1e12 * 1e18);
         _swap.deposit(1e12 * 1e18, 1e12 * 1e18);
         VM.stopPrank();
+        assertEq(_tokenA.balanceOf(_user), 0);
+        assertEq(_tokenB.balanceOf(_user), 0);
         assertEq(_swap.lpToken().balanceOf(_user), 1e12 * 1e18);
     }
 
-    function testDeposit(uint256 _tokenAAmt, uint256 _tokenBAmt) public {
+    function testDepositFuzz(uint256 _tokenAAmt, uint256 _tokenBAmt) public {
         // We *will* get overflows for very large amounts so let's limit them
         VM.assume(_tokenAAmt <= 1e12 * 1e18);
         VM.assume(_tokenBAmt <= 1e12 * 1e18);
@@ -60,5 +62,35 @@ contract DemoSwapV1Test is DSTestPlus {
             _swap.lpToken().balanceOf(_user),
             FixedPointMathLib.sqrt(_tokenAAmt * _tokenBAmt)
         );
+    }
+
+    function testWithdraw() public {
+        VM.startPrank(_user);
+        _tokenA.approve(address(_swap), 1e12 * 1e18);
+        _tokenB.approve(address(_swap), 1e12 * 1e18);
+        _swap.deposit(1e12 * 1e18, 1e12 * 1e18);
+        VM.stopPrank();
+        assertEq(_swap.lpToken().balanceOf(_user), 1e12 * 1e18);
+        VM.prank(_user);
+        _swap.withdraw(1e12 * 1e18);
+        assertEq(_swap.lpToken().balanceOf(_user), 0);
+        assertEq(_tokenA.balanceOf(_user), 1e12 * 1e18);
+        assertEq(_tokenB.balanceOf(_user), 1e12 * 1e18);
+    }
+
+    function testWithdrawFuzz(uint256 _tokenAAmt, uint256 _tokenBAmt) public {
+        // We *will* get overflows for very large amounts so let's limit them
+        VM.assume(_tokenAAmt <= 1e12 * 1e18);
+        VM.assume(_tokenBAmt <= 1e12 * 1e18);
+        VM.startPrank(_user);
+        _tokenA.approve(address(_swap), _tokenAAmt);
+        _tokenB.approve(address(_swap), _tokenBAmt);
+        _swap.deposit(_tokenAAmt, _tokenBAmt);
+        // _swap.withdraw(FixedPointMathLib.sqrt(_tokenAAmt * _tokenBAmt));
+        _swap.withdraw(_swap.lpToken().balanceOf(_user));
+        VM.stopPrank();
+        assertEq(_swap.lpToken().balanceOf(_user), 0);
+        assertEq(_tokenA.balanceOf(_user), _tokenAAmt);
+        assertEq(_tokenB.balanceOf(_user), _tokenBAmt);
     }
 }
