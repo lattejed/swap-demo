@@ -19,8 +19,8 @@ contract DemoSwapV1Test is DSTestPlus {
         _tokenA = new DemoERC20V1("Token A", "TKA", 18, _owner);
         _tokenB = new DemoERC20V1("Token B", "TKB", 18, _owner);
         VM.startPrank(_owner);
-        _tokenA.mint(_user, 100 * 1e18);
-        _tokenB.mint(_user, 100 * 1e18);
+        _tokenA.mint(_user, 1e12 * 1e18);
+        _tokenB.mint(_user, 1e12 * 1e18);
         VM.stopPrank();
         _swap = new DemoSwapV1(_tokenA, _tokenB, "Token LP", "TLP", 18);
 
@@ -34,24 +34,24 @@ contract DemoSwapV1Test is DSTestPlus {
     }
 
     function testBalances() public {
-        assertEq(_tokenA.balanceOf(address(_user)), 100 * 1e18);
-        assertEq(_tokenB.balanceOf(address(_user)), 100 * 1e18);
+        assertEq(_tokenA.balanceOf(address(_user)), 1e12 * 1e18);
+        assertEq(_tokenB.balanceOf(address(_user)), 1e12 * 1e18);
     }
 
     function testDeposit() public {
         VM.startPrank(_user);
-        _tokenA.approve(address(_swap), 100 * 1e18);
-        _tokenB.approve(address(_swap), 100 * 1e18);
-        _swap.deposit(100 * 1e18, 100 * 1e18);
+        _tokenA.approve(address(_swap), 1e12 * 1e18);
+        _tokenB.approve(address(_swap), 1e12 * 1e18);
+        _swap.deposit(1e12 * 1e18, 1e12 * 1e18);
         VM.stopPrank();
-        assertEq(_swap.lpToken().balanceOf(_user), 100 * 1e18);
+        assertEq(_swap.lpToken().balanceOf(_user), 1e12 * 1e18);
     }
 
     function testDeposit(uint256 _tokenAAmt, uint256 _tokenBAmt) public {
         // TODO: Do we want to handle 0 input explicitly?
         // We *will* get overflows for very large amounts so let's limit them
-        VM.assume(_tokenAAmt > 0 && _tokenAAmt <= 100 * 1e18);
-        VM.assume(_tokenBAmt > 0 && _tokenBAmt <= 100 * 1e18);
+        VM.assume(_tokenAAmt > 0 && _tokenAAmt <= 1e12 * 1e18);
+        VM.assume(_tokenBAmt > 0 && _tokenBAmt <= 1e12 * 1e18);
         VM.startPrank(_user);
         _tokenA.approve(address(_swap), _tokenAAmt);
         _tokenB.approve(address(_swap), _tokenBAmt);
