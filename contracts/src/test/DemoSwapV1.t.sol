@@ -41,7 +41,22 @@ contract DemoSwapV1Test is DSTestPlus {
         assertEq(_tokenB.balanceOf(address(_lp1)), 1e12 * 1e18);
     }
 
-    function testSwap() public {}
+    function testSwap() public {
+        _deposit(1e12 * 1e18, 1e12 * 1e18);
+        VM.prank(_owner);
+        _tokenA.mint(_user, 1);
+        VM.startPrank(_user);
+        _tokenA.approve(address(_swap), 1);
+        _swap.swap(address(_tokenA), 1);
+        VM.stopPrank();
+        emit log_named_decimal_uint("1e18", 1e18, 18);
+        emit log_named_decimal_uint(
+            "_tokenB.balanceOf(_user)",
+            _tokenB.balanceOf(_user),
+            18
+        );
+        assertEq(_tokenB.balanceOf(_user), 0);
+    }
 
     function testDeposit() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);

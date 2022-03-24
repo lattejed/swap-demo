@@ -47,20 +47,21 @@ contract DemoSwapV1 is DSTestPlus {
     }
 
     function swap(address _token, uint256 _amount) external {
+        DemoERC20V1 token1;
+        DemoERC20V1 token2;
         if (_token == address(_tokenA)) {
-            _tokenA.transferFrom(msg.sender, address(this), _amount);
-            _tokenB.transfer(
-                msg.sender,
-                FixedPointMathLib.divWadUp(_k, _amount)
-            );
+            token1 = _tokenA;
+            token2 = _tokenB;
         }
         if (_token == address(_tokenB)) {
-            _tokenB.transferFrom(msg.sender, address(this), _amount);
-            _tokenA.transfer(
-                msg.sender,
-                FixedPointMathLib.divWadUp(_k, _amount)
-            );
+            token1 = _tokenB;
+            token2 = _tokenA;
         }
+        /// This will fail if given an invalid token address
+        token1.transferFrom(msg.sender, address(this), _amount);
+        uint256 token2Amt = token2.balanceOf(address(this)) -
+            FixedPointMathLib.divWadUp(_k, token1.balanceOf(address(this)));
+        token2.transfer(msg.sender, token2Amt);
     }
 
     /// Deposit tokens in a pair and receive LP tokens
