@@ -4,8 +4,11 @@ pragma solidity >=0.8.10 <0.9.0;
 import {DemoERC20V1} from "./DemoERC20V1.sol";
 import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 
-// /// The `msg.sender` did not have enough TOK for tx
-// error InsufficientTokens(string _symbol);
+// FIXME: Remove this
+import {DSTestPlus} from "./test/utils/DSTestPlus.sol";
+
+// /// The `msg.sender` did not have tokens for call
+// error InsufficientBalance();
 
 /// @title DemoSwapV1
 /// @author Matthew Wiriyathananon-Smith <m@lattejed.com>
@@ -19,7 +22,7 @@ import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 /// various other blog posts about CPMMs.
 ///
 /// @dev This is meant to be a learning exercise for the author. Do not use this in production.
-contract DemoSwapV1 {
+contract DemoSwapV1 is DSTestPlus {
     DemoERC20V1 private _tokenA;
     DemoERC20V1 private _tokenB;
     uint256 private _k;
@@ -76,30 +79,33 @@ contract DemoSwapV1 {
         lpToken.mint(msg.sender, tokenLPAmt);
 
         /// Update k
-        _k = FixedPointMathLib.mulWadDown(
+        _k = FixedPointMathLib.mulWadUp(
             _tokenA.balanceOf(address(this)),
             _tokenB.balanceOf(address(this))
         );
     }
 
     function withdraw(uint256 _tokenLPAmt) external {
+        /// If _tokenLPAmt is greater than the sender's balance the call
+        /// will revert when `burn` is called
         uint256 share = FixedPointMathLib.divWadUp(
             lpToken.totalSupply(),
             _tokenLPAmt
         );
 
+        /// Burn any valid amount the sender is holding
         lpToken.burn(msg.sender, _tokenLPAmt);
 
         _tokenA.transfer(
             msg.sender,
-            FixedPointMathLib.mulWadDown(_tokenA.totalSupply(), share)
+            FixedPointMathLib.mulWadUp(_tokenA.balanceOf(address(this)), share)
         );
         _tokenB.transfer(
             msg.sender,
-            FixedPointMathLib.mulWadDown(_tokenB.totalSupply(), share)
+            FixedPointMathLib.mulWadUp(_tokenB.balanceOf(address(this)), share)
         );
 
-        _k = FixedPointMathLib.mulWadDown(
+        _k = FixedPointMathLib.mulWadUp(
             _tokenA.balanceOf(address(this)),
             _tokenB.balanceOf(address(this))
         );
