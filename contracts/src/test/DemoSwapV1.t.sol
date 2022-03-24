@@ -28,7 +28,7 @@ contract DemoSwapV1Test is DSTestPlus {
         VM.label(_user, "user");
         VM.label(address(_tokenA), "tokenA");
         VM.label(address(_tokenB), "tokenB");
-        VM.label(address(_swap.getLPToken()), "tokenLP");
+        VM.label(address(_swap.lpToken()), "tokenLP");
         VM.label(address(_swap), "swap");
     }
 
@@ -43,6 +43,6 @@ contract DemoSwapV1Test is DSTestPlus {
         _tokenB.approve(address(_swap), 100 * 1e18);
         _swap.deposit(100 * 1e18, 100 * 1e18);
         VM.stopPrank();
-        assertEq(_swap.getLPToken().balanceOf(_user), 100 * 1e18);
+        assertEq(_swap.lpToken().balanceOf(_user), 100 * 1e18);
     }
 }

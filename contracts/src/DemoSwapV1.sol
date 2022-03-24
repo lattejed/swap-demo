@@ -22,8 +22,9 @@ import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 contract DemoSwapV1 {
     DemoERC20V1 private _tokenA;
     DemoERC20V1 private _tokenB;
-    DemoERC20V1 private _tokenLP;
     uint256 private _k;
+
+    DemoERC20V1 public lpToken;
 
     constructor(
         DemoERC20V1 tokenA_,
@@ -34,7 +35,7 @@ contract DemoSwapV1 {
     ) {
         _tokenA = tokenA_;
         _tokenB = tokenB_;
-        _tokenLP = new DemoERC20V1(
+        lpToken = new DemoERC20V1(
             _name,
             _symbol,
             _decimals,
@@ -72,10 +73,6 @@ contract DemoSwapV1 {
         uint256 tokenLPAmt = FixedPointMathLib.sqrt(_tokenAAmt * _tokenBAmt);
 
         /// Mint LP tokens
-        _tokenLP.mint(msg.sender, tokenLPAmt);
-    }
-
-    function getLPToken() external view returns (DemoERC20V1) {
-        return _tokenLP;
+        lpToken.mint(msg.sender, tokenLPAmt);
     }
 }
