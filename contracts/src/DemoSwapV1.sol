@@ -85,6 +85,7 @@ contract DemoSwapV1 is DSTestPlus {
         );
     }
 
+    /// Burn LP tokens and receive a proportionate share of the token pool
     function withdraw(uint256 _tokenLPAmt) external {
         /// We won't check this. If `_tokenLPAmt` is greater than the sender's
         /// balance the call will revert when `burn` is called
