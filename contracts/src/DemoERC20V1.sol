@@ -23,8 +23,13 @@ contract DemoERC20V1 is ERC20 {
         _owner = owner_;
     }
 
-    function mint(address to, uint256 value) public virtual {
+    function mint(address _to, uint256 _amount) external virtual {
         if (msg.sender != _owner) revert InvalidSenderAddress(msg.sender);
-        _mint(to, value);
+        _mint(_to, _amount);
+    }
+
+    function burn(address _from, uint256 _amount) external virtual {
+        if (msg.sender != _owner) revert InvalidSenderAddress(msg.sender);
+        _burn(_from, _amount);
     }
 }

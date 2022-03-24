@@ -32,4 +32,20 @@ contract DemoERC20V1Test is DSTestPlus {
         );
         _token.mint(address(_owner), 1e18);
     }
+
+    function testBurn() public {
+        VM.prank(_owner);
+        _token.mint(address(_owner), 1e18);
+        assertEq(_token.balanceOf(address(_owner)), 1e18);
+        VM.prank(_owner);
+        _token.burn(address(_owner), 1e18);
+        assertEq(_token.balanceOf(address(_owner)), 0);
+    }
+
+    function testBadMBurn() public {
+        VM.expectRevert(
+            abi.encodeWithSelector(InvalidSenderAddress.selector, address(this))
+        );
+        _token.burn(address(_owner), 0);
+    }
 }
