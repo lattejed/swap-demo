@@ -50,6 +50,8 @@ contract DemoSwapV1 {
         /// gm(x/y) == gm(x)/gm(y) which means a geometric mean is correct when averaging
         /// normalized results.
         ///
+        /// The above also holds for gm(x*y) == gm(x)*gm(y)
+        ///
         /// We can probably just use a product here with the same results. Or possibly
         /// another type of average.
 
