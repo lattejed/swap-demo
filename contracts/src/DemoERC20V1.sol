@@ -18,7 +18,7 @@ contract DemoERC20V1 is ERC20 {
         string memory _name,
         string memory _symbol,
         uint8 _decimals,
-        address payable owner_
+        address payable owner_ // TODO: This probably shouldn't be payable
     ) ERC20(_name, _symbol, _decimals) {
         _owner = owner_;
     }
