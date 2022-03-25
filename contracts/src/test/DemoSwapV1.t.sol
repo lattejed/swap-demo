@@ -24,7 +24,7 @@ contract DemoSwapV1Test is DSTestPlus {
         _tokenA.mint(_lp1, 1e12 * 1e18);
         _tokenB.mint(_lp1, 1e12 * 1e18);
         VM.stopPrank();
-        _swap = new DemoSwapV1(_tokenA, _tokenB, "Token LP", "TLP", 18, 0);
+        _swap = new DemoSwapV1(_tokenA, _tokenB, "Token LP", "TLP", 18, 3);
 
         VM.label(address(this), "test");
         VM.label(_owner, "owner");
@@ -39,6 +39,24 @@ contract DemoSwapV1Test is DSTestPlus {
     function testBalances() public {
         assertEq(_tokenA.balanceOf(address(_lp1)), 1e12 * 1e18);
         assertEq(_tokenB.balanceOf(address(_lp1)), 1e12 * 1e18);
+    }
+
+    function testSwap() public {
+        _deposit(1e12 * 1e18, 1e12 * 1e18);
+        uint256 inAmt = 1000000000000000000;
+        // TODO: This was determined empirically. Should verify
+        uint256 noGAmt = 999999999999000000;
+        uint256 g = 1e18 - 3 * 1e15;
+        // TODO: This assumes that round down is correct. Need
+        // to verify that separately
+        uint256 netAmt = FixedPointMathLib.mulWadUp(noGAmt, g);
+        VM.prank(_owner);
+        _tokenA.mint(_user, inAmt);
+        VM.startPrank(_user);
+        _tokenA.approve(address(_swap), inAmt);
+        _swap.swapA(inAmt);
+        VM.stopPrank();
+        assertEq(_tokenB.balanceOf(_user), netAmt);
     }
 
     function testSwapMin() public {
@@ -61,7 +79,7 @@ contract DemoSwapV1Test is DSTestPlus {
     }
 
     // TODO: This is failing
-    function _testSwapFuzz(uint256 _swapAmt) public {
+    function testSwapFuzz(uint256 _swapAmt) public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
         VM.prank(_owner);
         _tokenA.mint(_user, _swapAmt);
