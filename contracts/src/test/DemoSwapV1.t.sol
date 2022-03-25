@@ -2,7 +2,7 @@
 pragma solidity >=0.8.10 <0.9.0;
 
 import {DSTestPlus} from "./utils/DSTestPlus.sol";
-import {DemoSwapV1} from "../DemoSwapV1.sol";
+import {DemoSwapV1, InvalidTokenPair} from "../DemoSwapV1.sol";
 import {DemoERC20V1} from "../DemoERC20V1.sol";
 import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 
@@ -39,6 +39,13 @@ contract DemoSwapV1Test is DSTestPlus {
     function testBalances() public {
         assertEq(_tokenA.balanceOf(address(_lp1)), 1e12 * 1e18);
         assertEq(_tokenB.balanceOf(address(_lp1)), 1e12 * 1e18);
+    }
+
+    function testSwapBadPair() public {
+        VM.expectRevert(InvalidTokenPair.selector);
+        _swap.swap(address(_tokenA), address(_tokenA), 1e18);
+        VM.expectRevert(InvalidTokenPair.selector);
+        _swap.swap(address(0), address(0), 1e18);
     }
 
     function testSwapMin() public {
