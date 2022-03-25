@@ -41,27 +41,10 @@ contract DemoSwapV1Test is DSTestPlus {
         assertEq(_tokenB.balanceOf(address(_lp1)), 1e12 * 1e18);
     }
 
-    function testSwap() public {
-        _deposit(1e12 * 1e18, 1e12 * 1e18);
-        uint256 inAmt = 1000000000000000000;
-        // TODO: This was determined empirically. Should verify
-        uint256 noGAmt = 999999999999000000;
-        uint256 g = 1e18 - 3 * 1e15;
-        // TODO: This assumes that round down is correct. Need
-        // to verify that separately
-        uint256 netAmt = FixedPointMathLib.mulWadUp(noGAmt, g);
-        VM.prank(_owner);
-        _tokenA.mint(_user, inAmt);
-        VM.startPrank(_user);
-        _tokenA.approve(address(_swap), inAmt);
-        _swap.swapA(inAmt);
-        VM.stopPrank();
-        assertEq(_tokenB.balanceOf(_user), netAmt);
-    }
-
     function testSwapMin() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
         uint256 inAmt = 10;
+        // This is the same with or without fee
         uint256 outAmt = 9;
         VM.prank(_owner);
         _tokenA.mint(_user, inAmt);
@@ -78,16 +61,26 @@ contract DemoSwapV1Test is DSTestPlus {
         _swap.swapA(0);
     }
 
-    // TODO: This is failing
-    function testSwapFuzz(uint256 _swapAmt) public {
+    function testSwap() public {
+        testSwapFuzz(1000000000000000000);
+    }
+
+    function testSwapFuzz(uint256 _inAmt) public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
+        uint256 noGAmt = (1e12 * 1e18) -
+            FixedPointMathLib.divWadUp(
+                FixedPointMathLib.mulWadUp(1e12 * 1e18, 1e12 * 1e18),
+                1e12 * 1e18 + _inAmt
+            );
+        uint256 g = 1e18 - 3 * 1e15;
+        uint256 netAmt = FixedPointMathLib.mulWadUp(noGAmt, g);
         VM.prank(_owner);
-        _tokenA.mint(_user, _swapAmt);
+        _tokenA.mint(_user, _inAmt);
         VM.startPrank(_user);
-        _tokenA.approve(address(_swap), _swapAmt);
-        _swap.swapA(_swapAmt);
+        _tokenA.approve(address(_swap), _inAmt);
+        _swap.swapA(_inAmt);
         VM.stopPrank();
-        // assertEq(_tokenB.balanceOf(_user), outAmt);
+        assertEq(_tokenB.balanceOf(_user), netAmt);
     }
 
     function testDeposit() public {
