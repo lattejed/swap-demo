@@ -26,15 +26,19 @@ contract DemoSwapV1 is DSTestPlus {
     DemoERC20V1 private _tokenA;
     DemoERC20V1 private _tokenB;
     uint256 private _k;
+    uint256 private _g;
 
     DemoERC20V1 public lpToken;
 
+    /// TODO:
+    /// @param _fee in tenths of a percent, e.g., 3 = 0.3%
     constructor(
         DemoERC20V1 tokenA_,
         DemoERC20V1 tokenB_,
         string memory _name,
         string memory _symbol,
-        uint8 _decimals
+        uint8 _decimals,
+        uint8 _fee
     ) {
         _tokenA = tokenA_;
         _tokenB = tokenB_;
@@ -44,6 +48,7 @@ contract DemoSwapV1 is DSTestPlus {
             _decimals,
             payable(address(this))
         );
+        _g = 1e18 - _fee * 1e15;
     }
 
     /// Swap tokenA for tokenB
