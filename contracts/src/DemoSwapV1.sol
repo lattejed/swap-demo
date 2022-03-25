@@ -144,8 +144,11 @@ contract DemoSwapV1 is DSTestPlus {
         uint256 _amount
     ) private {
         token1.transferFrom(msg.sender, address(this), _amount);
-        uint256 token2Amt = token2.balanceOf(address(this)) -
-            FixedPointMathLib.divWadUp(_k, token1.balanceOf(address(this)));
+        uint256 token2Amt = FixedPointMathLib.mulWadUp(
+            token2.balanceOf(address(this)) -
+                FixedPointMathLib.divWadUp(_k, token1.balanceOf(address(this))),
+            _g
+        );
         token2.transfer(msg.sender, token2Amt);
     }
 }
