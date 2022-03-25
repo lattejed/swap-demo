@@ -53,14 +53,20 @@ contract DemoSwapV1 is DSTestPlus {
 
     /// Swap tokenA for tokenB
     /// @param _amount of tokenA to swap
+    // TODO: These will accept a swap when the pool is empty which results
+    // in an infinite price.
     function swapA(uint256 _amount) external {
-        _swap(_tokenA, _tokenB, _amount);
+        uint256 outAmt = _token2Amt(_amount, _tokenA, _tokenB);
+        _tokenA.transferFrom(msg.sender, address(this), _amount);
+        _tokenB.transfer(msg.sender, outAmt);
     }
 
     /// Swap tokenB for tokenA
     /// @param _amount of tokenB to swap
     function swapB(uint256 _amount) external {
-        _swap(_tokenB, _tokenA, _amount);
+        uint256 outAmt = _token2Amt(_amount, _tokenB, _tokenA);
+        _tokenB.transferFrom(msg.sender, address(this), _amount);
+        _tokenA.transfer(msg.sender, outAmt);
     }
 
     /// Deposit tokens in a pair and receive LP tokens
@@ -135,20 +141,14 @@ contract DemoSwapV1 is DSTestPlus {
         );
     }
 
-    /// Do the actual swap
-    // TODO: This will accept a swap when the pool is empty which results
-    // in an infinite price.
-    function _swap(
+    function _token2Amt(
+        uint256 _token1Amt,
         DemoERC20V1 token1,
-        DemoERC20V1 token2,
-        uint256 _amount
-    ) private {
-        token1.transferFrom(msg.sender, address(this), _amount);
-        uint256 token2Amt = FixedPointMathLib.mulWadUp(
-            token2.balanceOf(address(this)) -
-                FixedPointMathLib.divWadUp(_k, token1.balanceOf(address(this))),
-            _g
-        );
-        token2.transfer(msg.sender, token2Amt);
+        DemoERC20V1 token2
+    ) private view returns (uint256) {
+        uint256 token1NewAmt = token1.balanceOf(address(this)) + _token1Amt;
+        uint256 netAmt = token2.balanceOf(address(this)) -
+            FixedPointMathLib.divWadUp(_k, token1NewAmt);
+        return FixedPointMathLib.mulWadUp(netAmt, _g);
     }
 }
