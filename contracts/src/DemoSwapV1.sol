@@ -141,6 +141,14 @@ contract DemoSwapV1 is DSTestPlus {
         );
     }
 
+    function swapAEstimate(uint256 _amount) external view returns (uint256) {
+        return _token2Amt(_amount, _tokenA, _tokenB);
+    }
+
+    function swapBEstimate(uint256 _amount) external view returns (uint256) {
+        return _token2Amt(_amount, _tokenB, _tokenA);
+    }
+
     function _token2Amt(
         uint256 _token1Amt,
         DemoERC20V1 token1,

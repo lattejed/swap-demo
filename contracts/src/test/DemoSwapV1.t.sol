@@ -85,6 +85,19 @@ contract DemoSwapV1Test is DSTestPlus {
         assertEq(_tokenB.balanceOf(_user), netAmt);
     }
 
+    function testSwapEstimate() public {
+        _deposit(1e12 * 1e18, 1e12 * 1e18);
+        uint256 grossAmt = (1e12 * 1e18) -
+            FixedPointMathLib.divWadUp(
+                FixedPointMathLib.mulWadUp(1e12 * 1e18, 1e12 * 1e18),
+                1e12 * 1e18 + 1000000000000000000
+            );
+        uint256 g = 1e18 - 3 * 1e15;
+        uint256 netAmt = FixedPointMathLib.mulWadUp(grossAmt, g);
+        assertEq(_swap.swapAEstimate(1000000000000000000), netAmt);
+        assertEq(_swap.swapBEstimate(1000000000000000000), netAmt);
+    }
+
     function testDeposit() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
         assertEq(_tokenA.balanceOf(_lp1), 0);
