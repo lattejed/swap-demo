@@ -50,7 +50,7 @@ contract DemoSwapV1Test is DSTestPlus {
         _tokenA.mint(_user, inAmt);
         VM.startPrank(_user);
         _tokenA.approve(address(_swap), inAmt);
-        _swap.swapA(inAmt);
+        _swap.swap(address(_tokenA), address(_tokenB), inAmt);
         VM.stopPrank();
         assertEq(_tokenB.balanceOf(_user), outAmt);
     }
@@ -58,7 +58,7 @@ contract DemoSwapV1Test is DSTestPlus {
     function testSwapZero() public {
         VM.expectRevert(ERROR_NULL);
         VM.prank(_user);
-        _swap.swapA(0);
+        _swap.swap(address(_tokenA), address(_tokenB), 0);
     }
 
     function testSwap() public {
@@ -80,7 +80,7 @@ contract DemoSwapV1Test is DSTestPlus {
         _tokenA.mint(_user, _inAmt);
         VM.startPrank(_user);
         _tokenA.approve(address(_swap), _inAmt);
-        _swap.swapA(_inAmt);
+        _swap.swap(address(_tokenA), address(_tokenB), _inAmt);
         VM.stopPrank();
         assertEq(_tokenB.balanceOf(_user), netAmt);
     }
@@ -94,8 +94,15 @@ contract DemoSwapV1Test is DSTestPlus {
             );
         uint256 g = 1e18 - 3 * 1e15;
         uint256 netAmt = FixedPointMathLib.mulWadUp(grossAmt, g);
-        assertEq(_swap.swapAEstimate(1000000000000000000), netAmt);
-        assertEq(_swap.swapBEstimate(1000000000000000000), netAmt);
+        uint256 inAmt = 1000000000000000000;
+        assertEq(
+            _swap.swapEstimate(address(_tokenA), address(_tokenB), inAmt),
+            netAmt
+        );
+        assertEq(
+            _swap.swapEstimate(address(_tokenB), address(_tokenA), inAmt),
+            netAmt
+        );
     }
 
     function testDeposit() public {
