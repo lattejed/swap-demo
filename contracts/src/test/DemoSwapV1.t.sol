@@ -66,14 +66,16 @@ contract DemoSwapV1Test is DSTestPlus {
     }
 
     function testSwapFuzz(uint256 _inAmt) public {
+        VM.assume(_inAmt <= 1e12 * 1e18);
+
         _deposit(1e12 * 1e18, 1e12 * 1e18);
-        uint256 noGAmt = (1e12 * 1e18) -
+        uint256 grossAmt = (1e12 * 1e18) -
             FixedPointMathLib.divWadUp(
                 FixedPointMathLib.mulWadUp(1e12 * 1e18, 1e12 * 1e18),
                 1e12 * 1e18 + _inAmt
             );
         uint256 g = 1e18 - 3 * 1e15;
-        uint256 netAmt = FixedPointMathLib.mulWadUp(noGAmt, g);
+        uint256 netAmt = FixedPointMathLib.mulWadUp(grossAmt, g);
         VM.prank(_owner);
         _tokenA.mint(_user, _inAmt);
         VM.startPrank(_user);
