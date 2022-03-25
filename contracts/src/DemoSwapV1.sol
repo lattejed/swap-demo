@@ -7,8 +7,8 @@ import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 // FIXME: Remove this
 import {DSTestPlus} from "./test/utils/DSTestPlus.sol";
 
-// /// The `msg.sender` did not have tokens for call
-// error InsufficientBalance();
+/// The swap from and swap to tokens were invalid
+error InvalidTokenPair();
 
 /// @title DemoSwapV1
 /// @author Matthew Wiriyathananon-Smith <m@lattejed.com>
@@ -29,6 +29,16 @@ contract DemoSwapV1 is DSTestPlus {
     uint256 private _g;
 
     DemoERC20V1 public lpToken;
+
+    modifier validTokenPair(address _from, address _to) {
+        if (
+            !(_from == address(_tokenA) && _to == address(_tokenB)) &&
+            !(_from == address(_tokenB) && _to == address(_tokenA))
+        ) {
+            revert InvalidTokenPair();
+        }
+        _;
+    }
 
     /// TODO:
     /// @param _fee in tenths of a percent, e.g., 3 = 0.3%
@@ -51,22 +61,20 @@ contract DemoSwapV1 is DSTestPlus {
         _g = 1e18 - _fee * 1e15;
     }
 
-    /// Swap tokenA for tokenB
-    /// @param _amount of tokenA to swap
+    /// Swap
+    /// @param _amount of token to swap
     // TODO: These will accept a swap when the pool is empty which results
     // in an infinite price.
-    function swapA(uint256 _amount) external {
-        uint256 outAmt = _token2Amt(_amount, _tokenA, _tokenB);
-        _tokenA.transferFrom(msg.sender, address(this), _amount);
-        _tokenB.transfer(msg.sender, outAmt);
-    }
-
-    /// Swap tokenB for tokenA
-    /// @param _amount of tokenB to swap
-    function swapB(uint256 _amount) external {
-        uint256 outAmt = _token2Amt(_amount, _tokenB, _tokenA);
-        _tokenB.transferFrom(msg.sender, address(this), _amount);
-        _tokenA.transfer(msg.sender, outAmt);
+    function swap(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) external validTokenPair(_from, _to) {
+        DemoERC20V1 fromToken = DemoERC20V1(_from);
+        DemoERC20V1 toToken = DemoERC20V1(_to);
+        uint256 outAmt = _tokenToAmt(fromToken, toToken, _amount);
+        fromToken.transferFrom(msg.sender, address(this), _amount);
+        toToken.transfer(msg.sender, outAmt);
     }
 
     /// Deposit tokens in a pair and receive LP tokens
@@ -141,22 +149,22 @@ contract DemoSwapV1 is DSTestPlus {
         );
     }
 
-    function swapAEstimate(uint256 _amount) external view returns (uint256) {
-        return _token2Amt(_amount, _tokenA, _tokenB);
+    function swapEstimate(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) external view validTokenPair(_from, _to) returns (uint256) {
+        return _tokenToAmt(DemoERC20V1(_from), DemoERC20V1(_to), _amount);
     }
 
-    function swapBEstimate(uint256 _amount) external view returns (uint256) {
-        return _token2Amt(_amount, _tokenB, _tokenA);
-    }
-
-    function _token2Amt(
-        uint256 _token1Amt,
-        DemoERC20V1 token1,
-        DemoERC20V1 token2
+    function _tokenToAmt(
+        DemoERC20V1 _fromToken,
+        DemoERC20V1 _toToken,
+        uint256 _amount
     ) private view returns (uint256) {
-        uint256 token1NewAmt = token1.balanceOf(address(this)) + _token1Amt;
-        uint256 netAmt = token2.balanceOf(address(this)) -
-            FixedPointMathLib.divWadUp(_k, token1NewAmt);
+        uint256 newFromAmt = _fromToken.balanceOf(address(this)) + _amount;
+        uint256 netAmt = _toToken.balanceOf(address(this)) -
+            FixedPointMathLib.divWadUp(_k, newFromAmt);
         return FixedPointMathLib.mulWadUp(netAmt, _g);
     }
 }
