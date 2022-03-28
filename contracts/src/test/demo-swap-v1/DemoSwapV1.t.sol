@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.10 <0.9.0;
 
-import {DSTestPlus} from "./utils/DSTestPlus.sol";
-import {DemoSwapV1, InvalidTokenPair} from "../DemoSwapV1.sol";
-import {DemoERC20V1} from "../DemoERC20V1.sol";
+import {DSTestPlus} from "../utils/DSTestPlus.sol";
+import {DemoSwapV1, InvalidTokenPair} from "../../DemoSwapV1.sol";
+import {DemoERC20V1} from "../../DemoERC20V1.sol";
 import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 
 contract DemoSwapV1Test is DSTestPlus {
