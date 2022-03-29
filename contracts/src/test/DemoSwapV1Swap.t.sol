@@ -20,7 +20,7 @@ contract DemoSwapV1Swap is DemoSwapV1Common {
     }
 
     function testSwapMin() public {
-        _deposit(_lp1, 1e12 * 1e18, 1e12 * 1e18);
+        _mintAndDeposit(_lp1, 1e12 * 1e18, 1e12 * 1e18);
         uint256 inAmt = 10;
         // This is the same with or without fee
         uint256 outAmt = 9;
@@ -46,7 +46,7 @@ contract DemoSwapV1Swap is DemoSwapV1Common {
     function testSwapFuzz(uint256 _inAmt) public {
         VM.assume(_inAmt <= 1e12 * 1e18);
 
-        _deposit(_lp1, 1e12 * 1e18, 1e12 * 1e18);
+        _mintAndDeposit(_lp1, 1e12 * 1e18, 1e12 * 1e18);
         uint256 grossAmt = (1e12 * 1e18) -
             FixedPointMathLib.divWadUp(
                 FixedPointMathLib.mulWadUp(1e12 * 1e18, 1e12 * 1e18),
@@ -64,7 +64,7 @@ contract DemoSwapV1Swap is DemoSwapV1Common {
     }
 
     function testSwapEstimate() public {
-        _deposit(_lp1, 1e12 * 1e18, 1e12 * 1e18);
+        _mintAndDeposit(_lp1, 1e12 * 1e18, 1e12 * 1e18);
         uint256 grossAmt = (1e12 * 1e18) -
             FixedPointMathLib.divWadUp(
                 FixedPointMathLib.mulWadUp(1e12 * 1e18, 1e12 * 1e18),
