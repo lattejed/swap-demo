@@ -39,7 +39,6 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
         assertEq(_tokenB.balanceOf(address(_swap)), poolBAmt);
     }
 
-    /*
     function testDeposit() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
         assertEq(_tokenA.balanceOf(_lp1), 0);
@@ -104,5 +103,4 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
         VM.prank(_lp1);
         _swap.withdraw(FixedPointMathLib.sqrt(1e12 * 1e18 * 1e12 * 1e18) + 1);
     }
-    */
 }
