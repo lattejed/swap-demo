@@ -164,7 +164,7 @@ contract DemoSwapV1 is DSTestPlus {
     ) private view returns (uint256) {
         uint256 newFromAmt = _fromToken.balanceOf(address(this)) + _amount;
         uint256 netAmt = _toToken.balanceOf(address(this)) -
-            FixedPointMathLib.divWadUp(_k, newFromAmt);
-        return FixedPointMathLib.mulWadUp(netAmt, _g);
+            FixedPointMathLib.divWadDown(_k, newFromAmt);
+        return FixedPointMathLib.mulWadDown(netAmt, _g);
     }
 }
