@@ -39,8 +39,12 @@ contract DemoSwapV1Common is DSTestPlus {
         VM.label(address(_swap), "swap");
     }
 
-    function _deposit(uint256 _tokenAAmt, uint256 _tokenBAmt) internal {
-        VM.startPrank(_lp1);
+    function _deposit(
+        address _lp,
+        uint256 _tokenAAmt,
+        uint256 _tokenBAmt
+    ) internal {
+        VM.startPrank(_lp);
         _tokenA.approve(address(_swap), _tokenAAmt);
         _tokenB.approve(address(_swap), _tokenBAmt);
         _swap.deposit(_tokenAAmt, _tokenBAmt);
