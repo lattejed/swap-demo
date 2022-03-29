@@ -60,8 +60,9 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
 
     function testWithdraw() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
-        VM.prank(_lp1);
-        _swap.withdraw(FixedPointMathLib.sqrt(1e12 * 1e18 * 1e12 * 1e18));
+        VM.startPrank(_lp1);
+        _swap.withdraw(_swap.lpToken().balanceOf(_lp1));
+        VM.stopPrank();
         assertEq(_swap.lpToken().balanceOf(_lp1), 0);
         assertEq(_tokenA.balanceOf(_lp1), 1e12 * 1e18);
         assertEq(_tokenB.balanceOf(_lp1), 1e12 * 1e18);
@@ -75,8 +76,9 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
 
     function testWithdrawOne() public {
         _deposit(1, 1);
-        VM.prank(_lp1);
-        _swap.withdraw(FixedPointMathLib.sqrt(1 * 1));
+        VM.startPrank(_lp1);
+        _swap.withdraw(_swap.lpToken().balanceOf(_lp1));
+        VM.stopPrank();
         assertEq(_swap.lpToken().balanceOf(_lp1), 0);
         assertEq(_tokenA.balanceOf(_lp1), 1e12 * 1e18);
         assertEq(_tokenB.balanceOf(_lp1), 1e12 * 1e18);
@@ -90,8 +92,9 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
         VM.assume(_tokenAAmt > 0 && _tokenBAmt > 0);
 
         _deposit(_tokenAAmt, _tokenBAmt);
-        VM.prank(_lp1);
-        _swap.withdraw(FixedPointMathLib.sqrt(_tokenAAmt * _tokenBAmt));
+        VM.startPrank(_lp1);
+        _swap.withdraw(_swap.lpToken().balanceOf(_lp1));
+        VM.stopPrank();
         assertEq(_swap.lpToken().balanceOf(_lp1), 0);
         assertEq(_tokenA.balanceOf(_lp1), 1e12 * 1e18);
         assertEq(_tokenB.balanceOf(_lp1), 1e12 * 1e18);
@@ -99,8 +102,9 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
 
     function testWithdrawTooMuch() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);
+        uint256 lpTokAmt = _swap.lpToken().balanceOf(_lp1);
         VM.expectRevert(ERROR_UNDER_OVERFLOW);
         VM.prank(_lp1);
-        _swap.withdraw(FixedPointMathLib.sqrt(1e12 * 1e18 * 1e12 * 1e18) + 1);
+        _swap.withdraw(lpTokAmt + 1);
     }
 }
