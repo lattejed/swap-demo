@@ -123,8 +123,8 @@ contract DemoSwapV1 is DSTestPlus {
         /// We won't check this. If `_tokenLPAmt` is greater than the sender's
         /// balance the call will revert when `burn` is called
         uint256 share = FixedPointMathLib.divWadDown(
-            lpToken.totalSupply(),
-            _tokenLPAmt
+            _tokenLPAmt,
+            lpToken.totalSupply()
         );
 
         /// Burn any valid amount the sender is holding
