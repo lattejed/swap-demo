@@ -64,14 +64,14 @@ contract DemoSwapV1Common is DSTestPlus {
         uint8 _fee
     ) internal view returns (uint256) {
         uint256 grossAmt = _token2.balanceOf(address(_swap)) -
-            FixedPointMathLib.divWadUp(
-                FixedPointMathLib.mulWadUp(
+            FixedPointMathLib.divWadDown(
+                FixedPointMathLib.mulWadDown(
                     _token1.balanceOf(address(_swap)),
                     _token2.balanceOf(address(_swap))
                 ),
                 _token1.balanceOf(address(_swap)) + _inAmt
             );
         uint256 g = 1e18 - _fee * 1e15;
-        return FixedPointMathLib.mulWadUp(grossAmt, g);
+        return FixedPointMathLib.mulWadDown(grossAmt, g);
     }
 }
