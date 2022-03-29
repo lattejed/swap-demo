@@ -12,11 +12,6 @@ contract DemoSwapV1Swap is DemoSwapV1Common {
         //
     }
 
-    function testBalances() public {
-        assertEq(_tokenA.balanceOf(address(_lp1)), 1e12 * 1e18);
-        assertEq(_tokenB.balanceOf(address(_lp1)), 1e12 * 1e18);
-    }
-
     function testSwapBadPair() public {
         VM.expectRevert(InvalidTokenPair.selector);
         _swap.swap(address(_tokenA), address(_tokenA), 1e18);
