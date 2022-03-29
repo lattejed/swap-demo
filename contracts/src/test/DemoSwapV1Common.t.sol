@@ -24,7 +24,6 @@ contract DemoSwapV1Common is DSTestPlus {
         _tokenA.mint(_lp1, 1e12 * 1e18);
         _tokenB.mint(_lp1, 1e12 * 1e18);
         VM.stopPrank();
-        _swap = new DemoSwapV1(_tokenA, _tokenB, "Token LP", "TLP", 18, 0); // 3);
 
         VM.label(address(this), "test");
         VM.label(_owner, "owner");
@@ -32,6 +31,10 @@ contract DemoSwapV1Common is DSTestPlus {
         VM.label(_user, "user");
         VM.label(address(_tokenA), "tokenA");
         VM.label(address(_tokenB), "tokenB");
+    }
+
+    function _setSwapContractWithFee(uint8 _fee) internal {
+        _swap = new DemoSwapV1(_tokenA, _tokenB, "Token LP", "TLP", 18, _fee);
         VM.label(address(_swap.lpToken()), "tokenLP");
         VM.label(address(_swap), "swap");
     }

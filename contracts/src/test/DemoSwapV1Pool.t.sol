@@ -9,7 +9,7 @@ import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 contract DemoSwapV1Pool is DemoSwapV1Common {
     function setUp() public override {
         super.setUp();
-        //
+        _setSwapContractWithFee(0);
     }
 
     function testPoolBalancing() public {
