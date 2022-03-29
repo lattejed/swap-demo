@@ -12,6 +12,27 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
         //
     }
 
+    function test() public {
+        uint256 inAmt = 1e18;
+        uint256 poolAAmt = 1e12 * 1e18;
+        uint256 poolBAmt = 1e12 * 1e18;
+
+        _deposit(poolAAmt, poolBAmt);
+        _mintAndSwap(_tokenA, _tokenB, inAmt);
+
+        assertEq(_tokenA.balanceOf(address(_swap)), poolAAmt + inAmt);
+        assertLt(_tokenB.balanceOf(address(_swap)), poolBAmt);
+
+        uint256 balAmt = poolBAmt - _tokenB.balanceOf(address(_swap));
+
+        emit log_named_decimal_uint("balAmt", balAmt, 18);
+
+        _mintAndSwap(_tokenB, _tokenA, balAmt);
+
+        assertEq(_tokenA.balanceOf(address(_swap)), poolAAmt);
+        assertEq(_tokenB.balanceOf(address(_swap)), poolBAmt);
+    }
+
     /*
     function testDeposit() public {
         _deposit(1e12 * 1e18, 1e12 * 1e18);

@@ -24,7 +24,7 @@ contract DemoSwapV1Common is DSTestPlus {
         _tokenA.mint(_lp1, 1e12 * 1e18);
         _tokenB.mint(_lp1, 1e12 * 1e18);
         VM.stopPrank();
-        _swap = new DemoSwapV1(_tokenA, _tokenB, "Token LP", "TLP", 18, 3);
+        _swap = new DemoSwapV1(_tokenA, _tokenB, "Token LP", "TLP", 18, 0); // 3);
 
         VM.label(address(this), "test");
         VM.label(_owner, "owner");
@@ -42,5 +42,36 @@ contract DemoSwapV1Common is DSTestPlus {
         _tokenB.approve(address(_swap), _tokenBAmt);
         _swap.deposit(_tokenAAmt, _tokenBAmt);
         VM.stopPrank();
+    }
+
+    function _mintAndSwap(
+        DemoERC20V1 _token1,
+        DemoERC20V1 _token2,
+        uint256 _amount
+    ) internal {
+        VM.prank(_owner);
+        _token1.mint(_user, _amount);
+        VM.startPrank(_user);
+        _token1.approve(address(_swap), _amount);
+        _swap.swap(address(_token1), address(_token2), _amount);
+        VM.stopPrank();
+    }
+
+    function _swapOutAmt(
+        DemoERC20V1 _token1,
+        DemoERC20V1 _token2,
+        uint256 _inAmt,
+        uint8 _fee
+    ) internal view returns (uint256) {
+        uint256 grossAmt = _token2.balanceOf(address(_swap)) -
+            FixedPointMathLib.divWadUp(
+                FixedPointMathLib.mulWadUp(
+                    _token1.balanceOf(address(_swap)),
+                    _token2.balanceOf(address(_swap))
+                ),
+                _token1.balanceOf(address(_swap)) + _inAmt
+            );
+        uint256 g = 1e18 - _fee * 1e15;
+        return FixedPointMathLib.mulWadUp(grossAmt, g);
     }
 }
