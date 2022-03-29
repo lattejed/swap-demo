@@ -13,14 +13,23 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
     }
 
     function testPoolBalancing() public {
-        uint256 inAmt = 1e18;
+        testPoolBalancingFuzz(1e18);
+    }
+
+    function testPoolBalancingFuzz(uint256 _inAmt) public {
         uint256 poolAAmt = 1e12 * 1e18;
         uint256 poolBAmt = 1e12 * 1e18;
+
+        // A zero trade won't imbalance the pool
+        VM.assume(_inAmt > 0);
+        // Trade can't be larger than the pool
+        VM.assume(_inAmt <= poolAAmt);
+
         _deposit(poolAAmt, poolBAmt);
 
         // trade A => B
-        _mintAndSwap(_tokenA, _tokenB, inAmt);
-        assertEq(_tokenA.balanceOf(address(_swap)), poolAAmt + inAmt);
+        _mintAndSwap(_tokenA, _tokenB, _inAmt);
+        assertEq(_tokenA.balanceOf(address(_swap)), poolAAmt + _inAmt);
         assertLt(_tokenB.balanceOf(address(_swap)), poolBAmt);
 
         // trade B => A, bringing pools back into balance
