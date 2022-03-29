@@ -112,7 +112,7 @@ contract DemoSwapV1 is DSTestPlus {
         lpToken.mint(msg.sender, tokenLPAmt);
 
         /// Update k
-        _k = FixedPointMathLib.mulWadUp(
+        _k = FixedPointMathLib.mulWadDown(
             _tokenA.balanceOf(address(this)),
             _tokenB.balanceOf(address(this))
         );
@@ -122,7 +122,7 @@ contract DemoSwapV1 is DSTestPlus {
     function withdraw(uint256 _tokenLPAmt) external {
         /// We won't check this. If `_tokenLPAmt` is greater than the sender's
         /// balance the call will revert when `burn` is called
-        uint256 share = FixedPointMathLib.divWadUp(
+        uint256 share = FixedPointMathLib.divWadDown(
             lpToken.totalSupply(),
             _tokenLPAmt
         );
@@ -133,17 +133,23 @@ contract DemoSwapV1 is DSTestPlus {
         /// Transfer share of pool to sender
         _tokenA.transfer(
             msg.sender,
-            FixedPointMathLib.mulWadUp(_tokenA.balanceOf(address(this)), share)
+            FixedPointMathLib.mulWadDown(
+                _tokenA.balanceOf(address(this)),
+                share
+            )
         );
         _tokenB.transfer(
             msg.sender,
-            FixedPointMathLib.mulWadUp(_tokenB.balanceOf(address(this)), share)
+            FixedPointMathLib.mulWadDown(
+                _tokenB.balanceOf(address(this)),
+                share
+            )
         );
 
         /// We're calling `transfer` on a trusted contract, so we can ignore
         /// the potential for reentrancy here.
         // solhint-disable-next-line reentrancy
-        _k = FixedPointMathLib.mulWadUp(
+        _k = FixedPointMathLib.mulWadDown(
             _tokenA.balanceOf(address(this)),
             _tokenB.balanceOf(address(this))
         );
