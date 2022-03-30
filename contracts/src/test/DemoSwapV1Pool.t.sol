@@ -125,8 +125,8 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
         _swap.withdraw(_swap.lpToken().balanceOf(_lp1));
         VM.stopPrank();
         assertEq(_swap.lpToken().balanceOf(_lp1), 0);
-        assertEq(_tokenA.balanceOf(_lp1), 1e12 * 1e18);
-        assertEq(_tokenB.balanceOf(_lp1), 1e12 * 1e18);
+        assertEq(_tokenA.balanceOf(_lp1), 1);
+        assertEq(_tokenB.balanceOf(_lp1), 1);
     }
 
     function testWithdrawFuzz(uint256 _tokenAAmt, uint256 _tokenBAmt) public {
@@ -141,8 +141,8 @@ contract DemoSwapV1Pool is DemoSwapV1Common {
         _swap.withdraw(_swap.lpToken().balanceOf(_lp1));
         VM.stopPrank();
         assertEq(_swap.lpToken().balanceOf(_lp1), 0);
-        assertEq(_tokenA.balanceOf(_lp1), 1e12 * 1e18);
-        assertEq(_tokenB.balanceOf(_lp1), 1e12 * 1e18);
+        assertEq(_tokenA.balanceOf(_lp1), _tokenAAmt);
+        assertEq(_tokenB.balanceOf(_lp1), _tokenBAmt);
     }
 
     function testWithdrawTooMuch() public {
